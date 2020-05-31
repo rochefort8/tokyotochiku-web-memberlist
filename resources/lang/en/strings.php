@@ -1362,6 +1362,7 @@ return [
     ],
 
     'menu' => [
+        'members'  => '名簿管理',
         'menu_type' => 'メニュー種類',
         'description' => '左メニューの項目を定義します。ブラウザの更新後、変更内容が反映されます。',
         'menu_target' => '対象',

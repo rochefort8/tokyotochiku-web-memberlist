@@ -12,9 +12,14 @@
       <li class="nav-item">
         <router-link to="/products" class="nav-link">
           <i class="nav-icon fas fa-list orange"></i>
-          <p>
-            Product
-          </p>
+          <p>Product</p>
+        </router-link>
+      </li>
+
+      <li class="nav-item">
+        <router-link to="/members" class="nav-link">
+          <i class="nav-icon fas fa-list orange"></i>
+          <p>{{ __('strings.menu.members') }}</p>
         </router-link>
       </li>
 
