@@ -43,8 +43,9 @@ while IFS=, read f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14_; do
     # Address
     if [ -n "$f10"  -a "$f10" != "-" -a "$f10" != "ー" ]; then
         f10="$d10,$d11$d12$d13$d14"
-    fi 
-
+    else 
+        f10=","
+    fi
     # Phone1
     if [ -n "$f11"  -a "$f11" != "-" -a "$f11" != "ー" ]; then
         f11="$d7"
