@@ -30,10 +30,12 @@ Route::post('change-password', 'API\V1\ProfileController@changePassword');
 Route::get('tag/list', 'API\V1\TagController@list');
 Route::get('category/list', 'API\V1\CategoryController@list');
 Route::post('product/upload', 'API\V1\ProductController@upload');
+Route::post('member/upload', 'API\V1\MemberController@upload');
 
 Route::apiResources([
     'user' => 'API\V1\UserController',
     'product' => 'API\V1\ProductController',
+    'member' => 'API\V1\MemberController',
     'category' => 'API\V1\CategoryController',
     'tag' => 'API\V1\TagController',
 ]);

@@ -7,7 +7,7 @@
         
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">Product List</h3>
+                <h3 class="card-title">Member List</h3>
 
                 <div class="card-tools">
                   
@@ -23,29 +23,22 @@
                   <thead>
                     <tr>
                       <th>ID</th>
-                      <th>Name</th>
-                      <th>Description</th>
-                      <th>Category</th>
-                      <th>Price</th>
-                      <th>Action</th>
                     </tr>
+
                   </thead>
                   <tbody>
-                     <tr v-for="product in products.data" :key="product.id">
+                     <tr v-for="member in members.data" :key="member.email">
 
-                      <td>{{product.id}}</td>
-                      <td>{{product.name}}</td>
-                      <td>{{product.description | truncate(30, '...')}}</td>
-                      <td>{{product.category.name}}</td>
-                      <td>{{product.price}}</td>
-                      <!-- <td><img v-bind:src="'/' + product.photo" width="100" alt="product"></td> -->
+                      <td>{{member.email}}</td>
+                      <td>{{member.last_name_kanji}}</td>
+                      <!-- <td><img v-bind:src="'/' + member.photo" width="100" alt="member"></td> -->
                       <td>
                         
-                        <a href="#" @click="editModal(product)">
+                        <a href="#" @click="editModal(member)">
                             <i class="fa fa-edit blue"></i>
                         </a>
                         /
-                        <a href="#" @click="deleteProduct(product.id)">
+                        <a href="#" @click="deleteMember(member.id)">
                             <i class="fa fa-trash red"></i>
                         </a>
                       </td>
@@ -55,7 +48,7 @@
               </div>
               <!-- /.card-body -->
               <div class="card-footer">
-                  <pagination :data="products" @pagination-change-page="getResults"></pagination>
+                  <pagination :data="members" @pagination-change-page="getResults"></pagination>
               </div>
             </div>
             <!-- /.card -->
@@ -67,14 +60,14 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" v-show="!editmode">Create New Product</h5>
-                    <h5 class="modal-title" v-show="editmode">Edit Product</h5>
+                    <h5 class="modal-title" v-show="!editmode">Create New Member</h5>
+                    <h5 class="modal-title" v-show="editmode">Edit Member</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
 
-                <form @submit.prevent="editmode ? updateProduct() : createProduct()">
+                <form @submit.prevent="editmode ? updateMember() : createMember()">
                     <div class="modal-body">
                         <div class="form-group">
                             <label>Name</label>
@@ -139,7 +132,7 @@
         data () {
             return {
                 editmode: false,
-                products : {},
+                members : {},
                 form: new Form({
                     id : '',
                     category : '',
@@ -163,14 +156,14 @@
 
               this.$Progress.start();
               
-              axios.get('api/product?page=' + page).then(({ data }) => (this.products = data.data));
+              axios.get('api/member?page=' + page).then(({ data }) => (this.members = data.data));
 
               this.$Progress.finish();
           },
-          loadProducts(){
+          loadMembers(){
 
             // if(this.$gate.isAdmin()){
-              axios.get("api/product").then(({ data }) => (this.products = data.data));
+              axios.get("api/member").then(({ data }) => (this.members = data.data));
             // }
           },
           loadCategories(){
@@ -183,21 +176,21 @@
                   });
               }).catch(() => console.warn('Oh. Something went wrong'));
           },
-          editModal(product){
+          editModal(member){
               this.editmode = true;
               this.form.reset();
               $('#addNew').modal('show');
-              this.form.fill(product);
+              this.form.fill(member);
           },
           newModal(){
               this.editmode = false;
               this.form.reset();
               $('#addNew').modal('show');
           },
-          createProduct(){
+          createMember(){
               this.$Progress.start();
 
-              this.form.post('api/product')
+              this.form.post('api/member')
               .then((data)=>{
                 if(data.data.success){
                   $('#addNew').modal('hide');
@@ -207,7 +200,7 @@
                         title: data.data.message
                     });
                   this.$Progress.finish();
-                  this.loadProducts();
+                  this.loadMembers();
 
                 } else {
                   Toast.fire({
@@ -226,9 +219,9 @@
                   });
               })
           },
-          updateProduct(){
+          updatemember(){
               this.$Progress.start();
-              this.form.put('api/product/'+this.form.id)
+              this.form.put('api/member/'+this.form.id)
               .then((response) => {
                   // success
                   $('#addNew').modal('hide');
@@ -239,14 +232,14 @@
                   this.$Progress.finish();
                       //  Fire.$emit('AfterCreate');
 
-                  this.loadProducts();
+                  this.loadMembers();
               })
               .catch(() => {
                   this.$Progress.fail();
               });
 
           },
-          deleteProduct(id){
+          deleteMember(id){
               Swal.fire({
                   title: 'Are you sure?',
                   text: "You won't be able to revert this!",
@@ -258,14 +251,14 @@
 
                       // Send request to the server
                         if (result.value) {
-                              this.form.delete('api/product/'+id).then(()=>{
+                              this.form.delete('api/member/'+id).then(()=>{
                                       Swal.fire(
                                       'Deleted!',
                                       'Your file has been deleted.',
                                       'success'
                                       );
                                   // Fire.$emit('AfterCreate');
-                                  this.loadProducts();
+                                  this.loadMembers();
                               }).catch((data)=> {
                                   Swal.fire("Failed!", data.message, "warning");
                               });
@@ -280,7 +273,7 @@
         created() {
             this.$Progress.start();
 
-            this.loadProducts();
+            this.loadMembers();
             this.loadCategories();
             this.loadTags();
 
