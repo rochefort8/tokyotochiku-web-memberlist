@@ -11,10 +11,13 @@
 
                 <div class="card-tools">
                   
-                  <button type="button" class="btn btn-sm btn-primary" @click="newModal">
+                  <router-link to="/members/create" class="btn btn-default">新規登録</router-link>
+                  <!--
+                  <button type="button" class="btn btn-sm btn-primary" @click="/members/create">
                       <i class="fa fa-plus-square"></i>
                       Add New
                   </button>
+                  -->
                 </div>
 
                 <div class="input-group">
@@ -88,75 +91,11 @@
               
               <div class="card-footer">
                 <div style="margin-top: 40px" class="col-sm-6 text-right">全 {{total}} 件中 {{from}} 〜 {{to}} 件表示</div>
-                <pagination :data="members" :limit=2 :align=center @pagination-change-page="getResults"></pagination>
+                <pagination :data="members" :limit=2 @pagination-change-page="getResults"></pagination>
               </div>
             </div>
             <!-- /.card -->
           </div>
-        </div>
-
-        <!-- Modal -->
-        <div class="modal fade" id="addNew" tabindex="-1" role="dialog" aria-labelledby="addNew" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" v-show="!editmode">Create New Member</h5>
-                    <h5 class="modal-title" v-show="editmode">Edit Member</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-
-                <form @submit.prevent="editmode ? updateMember() : createMember()">
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label>Name</label>
-                            <input v-model="form.name" type="text" name="name"
-                                class="form-control" :class="{ 'is-invalid': form.errors.has('name') }">
-                            <has-error :form="form" field="name"></has-error>
-                        </div>
-                        <div class="form-group">
-                            <label>Description</label>
-                            <input v-model="form.description" type="text" name="description"
-                                class="form-control" :class="{ 'is-invalid': form.errors.has('description') }">
-                            <has-error :form="form" field="description"></has-error>
-                        </div>
-                        <div class="form-group">
-                            <label>Price</label>
-                            <input v-model="form.price" type="text" name="price"
-                                class="form-control" :class="{ 'is-invalid': form.errors.has('price') }">
-                            <has-error :form="form" field="price"></has-error>
-                        </div>
-                        <div class="form-group">
-
-                            <label>Category</label>
-                            <select class="form-control" v-model="form.category_id">
-                              <option 
-                                  v-for="(cat,index) in categories" :key="index"
-                                  :value="index"
-                                  :selected="index == form.category_id">{{ cat }}</option>
-                            </select>
-                            <has-error :form="form" field="category_id"></has-error>
-                        </div>
-                        <div class="form-group">
-                            <label>Tags</label>
-                            <vue-tags-input
-                              v-model="form.tag"
-                              :tags="form.tags"
-                              :autocomplete-items="filteredItems"
-                              @tags-changed="newTags => form.tags = newTags"
-                            />
-                            <has-error :form="form" field="tags"></has-error>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button v-show="editmode" type="submit" class="btn btn-success">Update</button>
-                        <button v-show="!editmode" type="submit" class="btn btn-primary">Create</button>
-                    </div>
-                  </form>
-                </div>
-            </div>
         </div>
     </div>
   </section>
@@ -245,11 +184,6 @@
               this.form.reset();
               $('#addNew').modal('show');
               this.form.fill(member);
-          },
-          newModal(){
-              this.editmode = false;
-              this.form.reset();
-              $('#addNew').modal('show');
           },
           createMember(){
               this.$Progress.start();
