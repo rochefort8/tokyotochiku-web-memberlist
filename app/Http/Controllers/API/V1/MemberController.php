@@ -29,15 +29,41 @@ class MemberController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
 
-//        $members = $this->member->latest()->with('category', 'tags')->paginate(10);
-//        $members = $this->member->latest()->paginate(10);
-        $members = $this->member->latest()->paginate(10);
+        $query = $this->member->query() ;
 
-        \Log::info($members);
+        # Query 
+        $keywords = [ 'email', 'address', 'graduate', 'junior_high_school', 'club'];
+        foreach($keywords as $str) {   
+            $value = $request[$str] ;
+            if (!empty($value)) {
+                $query->where($str,'like','%'.$value.'%');
+            }    
+        }
 
+        # QUery both phone 1 and 2
+        $str = 'phone' ;
+        $value = $request[$str] ;
+        if (!empty($request[$str])) {
+            $query->where('phone1','like','%'.$value.'%');
+            $query->orWhere('phone2','like','%'.$value.'%');
+        }
+      
+        # Convert Kana
+        $str = 'name' ;
+        $value = $request[$str] ;
+        if (!empty($value)) {
+            $value = mb_convert_kana($value,'KC','UTF-8') ;
+
+            $query->where('first_name_kanji','like','%'.$value.'%');
+            $query->orWhere('last_name_kanji','like','%'.$value.'%');
+            $query->orWhere('first_name_kana','like','%'.$value.'%');
+            $query->orWhere('last_name_kana','like','%'.$value.'%');
+        }
+
+        $members = $query->latest()->paginate(10) ;  
         return $this->sendResponse($members, 'Member listt');
     }
 
@@ -74,7 +100,7 @@ class MemberController extends BaseController
      */
     public function show($id)
     {
-        $Member = $this->Member->with(['category', 'tags'])->findOrFail($id);
+        $member = $this->member->with(['category', 'tags'])->findOrFail($id);
 
         return $this->sendResponse($Member, 'Member Details');
     }

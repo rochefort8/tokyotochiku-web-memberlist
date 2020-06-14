@@ -16,6 +16,30 @@
                       Add New
                   </button>
                 </div>
+
+                <div class="input-group">
+                  <div class="input-group-btn search-panel">
+                      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              <span id="search_concept">お名前</span> 
+                      </button>
+
+                      <ul class="dropdown-menu" role="menu">
+                          <li><a href="javascript:void(0)" @click="updateOption('name','お名前')">お名前</a></li>                   
+                          <li><a href="javascript:void(0)" @click="updateOption('graduate','卒業期')">卒業期</a></li>
+                          <li><a href="javascript:void(0)" @click="updateOption('email','メールアドレス')">メールアドレス</a></li>
+                          <li><a href="javascript:void(0)" @click="updateOption('address','住所')">住所</a></li>
+                          <li><a href="javascript:void(0)" @click="updateOption('phone','電話番号')">電話番号</a></li>
+                          <li><a href="javascript:void(0)" @click="updateOption('club','部活動')">部活動</a></li>
+                          <li><a href="javascript:void(0)" @click="updateOption('junior_high_school','出身中学')">出身中学</a></li>
+                      </ul>
+                  </div>
+                  <input type="hidden" name="search_param" value="all" id="search_param">         
+                  <input type="text" class="form-control" id="search_keyword" v-model="keyword" placeholder="Type content...">
+                  <span class="input-group-btn">
+                      <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
+                  </span>
+              </div>
+
               </div>
               <!-- /.card-header -->
               <div class="card-body table-responsive p-0">
@@ -23,14 +47,27 @@
                   <thead>
                     <tr>
                       <th>ID</th>
-                    </tr>
+                      <th>卒業期</th>
+                      <th>お名前</th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th>性別</th>
+                      <th>操作</th>
+                  </tr>
 
                   </thead>
                   <tbody>
-                     <tr v-for="member in members.data" :key="member.email">
+                     <tr v-for="member in members.data" :key="member.id">
 
-                      <td>{{member.email}}</td>
+                      <td>{{member.id}}</td>
+                      <td>{{member.graduate}}</td>
                       <td>{{member.last_name_kanji}}</td>
+                      <td>{{member.first_name_kanji}}</td>
+                      <td>{{member.last_name_kana}}</td>
+                      <td>{{member.first_name_kana}}</td>
+                      <td>{{member.gender}}</td>
+
                       <!-- <td><img v-bind:src="'/' + member.photo" width="100" alt="member"></td> -->
                       <td>
                         
@@ -47,8 +84,11 @@
                 </table>
               </div>
               <!-- /.card-body -->
+            
+              
               <div class="card-footer">
-                  <pagination :data="members" @pagination-change-page="getResults"></pagination>
+                <div style="margin-top: 40px" class="col-sm-6 text-right">全 {{total}} 件中 {{from}} 〜 {{to}} 件表示</div>
+                <pagination :data="members" :limit=2 :align=center @pagination-change-page="getResults"></pagination>
               </div>
             </div>
             <!-- /.card -->
@@ -133,6 +173,14 @@
             return {
                 editmode: false,
                 members : {},
+                current_page: 1,
+                last_page: 1,
+                total: 1,
+                from: 0,
+                to: 0,
+                keyword: '',
+                search_item: 'name',
+
                 form: new Form({
                     id : '',
                     category : '',
@@ -150,18 +198,34 @@
                 autocompleteItems: [],
             }
         },
+        watch: {
+          keyword: function (q) {
+            var app = this;
+            axios.get('/api/member?' + this.search_item + '=' + q)
+              .then(({ data }) => (this.members = data.data));	   
+          },
+        },
         methods: {
 
           getResults(page = 1) {
+              var app = this;
+              var url = '/api/member?page=' + page ;
+
+              if (this.keyword != "") {
+                  url = url + '&' + this.search_item + '=' + this.keyword;
+              }
 
               this.$Progress.start();
-              
-              axios.get('api/member?page=' + page).then(({ data }) => (this.members = data.data));
+              axios.get(url).then(({ data }) => (this.members = data.data));
+
 
               this.$Progress.finish();
           },
           loadMembers(){
 
+              if (this.keyword != "") {
+                  url = url + '&' + this.search_item + '=' + this.keyword;
+              }
             // if(this.$gate.isAdmin()){
               axios.get("api/member").then(({ data }) => (this.members = data.data));
             // }
@@ -265,7 +329,15 @@
                         }
                   })
           },
-
+            updateOption(option,text) {
+                this.search_item = option;
+                $('.search-panel span#search_concept').text(text);
+                this.keyword = '';
+                this.loadMembers();
+            },
+            toggleMenu() {
+              this.showMenu = !this.showMenu;
+            },
         },
         mounted() {
             
@@ -290,6 +362,6 @@
               return i.text.toLowerCase().indexOf(this.tag.toLowerCase()) !== -1;
             });
           },
-        },
+        }
     }
 </script>
