@@ -18,8 +18,6 @@ class MemberController extends BaseController
      */
     public function __construct(Member $member)
     {
-        \Log::info("Member:__constructor");
-
         $this->middleware('auth:api');
         $this->member = $member;
     }
@@ -31,11 +29,10 @@ class MemberController extends BaseController
      */
     public function index(Request $request)
     {
-
         $query = $this->member->query() ;
 
         # Query 
-        $keywords = [ 'email', 'address', 'graduate', 'junior_high_school', 'club'];
+        $keywords = [ 'email', 'address', 'graduate', 'junior_high_school', 'club', 'annual_fee'];
         foreach($keywords as $str) {   
             $value = $request[$str] ;
             if (!empty($value)) {
