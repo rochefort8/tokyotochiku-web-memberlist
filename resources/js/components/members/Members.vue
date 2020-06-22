@@ -77,14 +77,13 @@
                           <i class="fa fa-eye green"></i>
                         </router-link>
 
-                        <a href="#" @click="editModal(member)">
-                            <i class="fa fa-edit blue"></i>
-                        </a>
-                        <a href="#" @click="deleteMember(member.id)">
-                            <i class="fa fa-trash red"></i>
-                        </a>
+                        <router-link :to="{path: 'members/edit', query: {id: member.id}}"> 
+                          <i class="fa fa-edit blue"></i>
+                        </router-link>
 
-
+                        <router-link :to="{path: 'members/delete', query: {id: member.id}}"> 
+                          <i class="fa fa-trash red"></i>
+                        </router-link>
                       </td>
                     </tr>
                   </tbody>

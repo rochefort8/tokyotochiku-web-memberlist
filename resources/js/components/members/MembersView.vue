@@ -6,6 +6,7 @@
             <div class="col-12">
             
                 <div class="card">
+                
                 <!-- /.card-header -->
                 <div class="card-body table-responsive p-0">
                     <div class="card-header">
@@ -67,10 +68,10 @@
                 <div class="card-footer">
 
                 </div>
-                </div>
                 <!-- /.card -->
             </div>
             </div>
+        </div>
         </div>
     </section>
 
