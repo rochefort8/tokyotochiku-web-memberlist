@@ -31,8 +31,10 @@ class MemberController extends BaseController
     {
         $query = $this->member->query() ;
 
+        \Log::info($request);
+
         # Query 
-        $keywords = [ 'email', 'address', 'graduate', 'junior_high_school', 'club', 'annual_fee'];
+        $keywords = [ 'email', 'address', 'graduate', 'junior_high_school', 'club', 'annual_fee', 'id'];
         foreach($keywords as $str) {   
             $value = $request[$str] ;
             if (!empty($value)) {
@@ -41,6 +43,7 @@ class MemberController extends BaseController
         }
 
         # QUery both phone 1 and 2
+
         $str = 'phone' ;
         $value = $request[$str] ;
         if (!empty($request[$str])) {
@@ -61,6 +64,10 @@ class MemberController extends BaseController
         }
 
         $members = $query->latest()->paginate(10) ;  
+
+        \Log::info($members);
+
+
         return $this->sendResponse($members, 'Member listt');
     }
 

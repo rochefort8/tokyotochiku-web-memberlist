@@ -73,14 +73,18 @@
 
                       <!-- <td><img v-bind:src="'/' + member.photo" width="100" alt="member"></td> -->
                       <td>
-                        
+                        <router-link :to="{path: 'members/view', query: {id: member.id}}"> 
+                          <i class="fa fa-eye green"></i>
+                        </router-link>
+
                         <a href="#" @click="editModal(member)">
                             <i class="fa fa-edit blue"></i>
                         </a>
-                        /
                         <a href="#" @click="deleteMember(member.id)">
                             <i class="fa fa-trash red"></i>
                         </a>
+
+
                       </td>
                     </tr>
                   </tbody>
@@ -166,7 +170,7 @@
                   url = url + '&' + this.search_item + '=' + this.keyword;
               }
             // if(this.$gate.isAdmin()){
-              axios.get("api/member").then(({ data }) => (this.members = data.data));
+              axios.get("/api/member").then(({ data }) => (this.members = data.data));
             // }
           },
           loadCategories(){
