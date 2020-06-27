@@ -7,13 +7,16 @@
         
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">Member List</h3>
+              <!--
+                <h1 class="card-title">{{this.fiscal_year}}年度年会費支払者リスト</h1>
+              -->
+                <h1>{{this.fiscal_year}}年度年会費支払者リスト</h1>
 
                 <div class="card-tools">
                   
-                  <router-link to="/annualfee/create" class="btn btn-default">新規登録</router-link>
+                  <router-link to="/members/create" class="btn btn-default">新規登録</router-link>
                   <!--
-                  <button type="button" class="btn btn-sm btn-primary" @click="/annualfee/create">
+                  <button type="button" class="btn btn-sm btn-primary" @click="/members/create">
                       <i class="fa fa-plus-square"></i>
                       Add New
                   </button>
@@ -23,13 +26,17 @@
                 <div class="input-group">
                   <div class="input-group-btn search-panel">
                       <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              <span id="search_concept">2019年度</span> 
+                              <span id="search_concept">お名前</span> 
                       </button>
 
                       <ul class="dropdown-menu" role="menu">
-                          <li><a href="javascript:void(0)" @click="updateOption('annual_fee','2019')">2019年度</a></li>                   
-                          <li><a href="javascript:void(0)" @click="updateOption('annual_fee','2018')">2018年度</a></li>                   
-                          <li><a href="javascript:void(0)" @click="updateOption('annual_fee','2017')">2017年度</a></li>                   
+                          <li><a href="javascript:void(0)" @click="updateOption('name','お名前')">お名前</a></li>                   
+                          <li><a href="javascript:void(0)" @click="updateOption('graduate','卒業期')">卒業期</a></li>
+                          <li><a href="javascript:void(0)" @click="updateOption('email','メールアドレス')">メールアドレス</a></li>
+                          <li><a href="javascript:void(0)" @click="updateOption('address','住所')">住所</a></li>
+                          <li><a href="javascript:void(0)" @click="updateOption('phone','電話番号')">電話番号</a></li>
+                          <li><a href="javascript:void(0)" @click="updateOption('club','部活動')">部活動</a></li>
+                          <li><a href="javascript:void(0)" @click="updateOption('junior_high_school','出身中学')">出身中学</a></li>
                       </ul>
                   </div>
                   <input type="hidden" name="search_param" value="all" id="search_param">         
@@ -69,14 +76,13 @@
 
                       <!-- <td><img v-bind:src="'/' + member.photo" width="100" alt="member"></td> -->
                       <td>
-                        
-                        <a href="#" @click="editModal(member)">
-                            <i class="fa fa-edit blue"></i>
-                        </a>
-                        /
-                        <a href="#" @click="deleteMember(member.id)">
-                            <i class="fa fa-trash red"></i>
-                        </a>
+                        <router-link :to="{path: 'members/view', query: {id: member.id}}"> 
+                          <i class="fa fa-eye green"></i>
+                        </router-link>
+
+                        <router-link :to="{path: 'members/delete', query: {id: member.id}}"> 
+                          <i class="fa fa-trash red"></i>
+                        </router-link>
                       </td>
                     </tr>
                   </tbody>
@@ -87,7 +93,7 @@
               
               <div class="card-footer">
                 <div style="margin-top: 40px" class="col-sm-6 text-right">全 {{total}} 件中 {{from}} 〜 {{to}} 件表示</div>
-                <pagination :data="members" :limit=2 @pagination-change-page="getResults"></pagination>
+                <pagination :data="members" :limit=2 @pagination-change-page="loadMembers"></pagination>
               </div>
             </div>
             <!-- /.card -->
@@ -115,6 +121,7 @@
                 to: 0,
                 keyword: '',
                 search_item: 'name',
+                fiscal_year: '2019',
 
                 form: new Form({
                     id : '',
@@ -135,103 +142,22 @@
         },
         watch: {
           keyword: function (q) {
-            var app = this;
-            axios.get('/api/member?' + this.search_item + '=' + q)
-              .then(({ data }) => (this.members = data.data));	   
-          },
+            this.keyword = q ;
+            this.loadMembers();
+          }
         },
         methods: {
+          loadMembers(page = 1){
 
-          getResults(page = 1) {
               var app = this;
               var url = '/api/member?page=' + page ;
-
+              url = url + '&' + 'annual_fee=' + this.fiscal_year;
               if (this.keyword != "") {
                   url = url + '&' + this.search_item + '=' + this.keyword;
               }
-
               this.$Progress.start();
               axios.get(url).then(({ data }) => (this.members = data.data));
-
-
               this.$Progress.finish();
-          },
-          loadMembers(){
-
-              if (this.keyword != "") {
-                  url = url + '&' + this.search_item + '=' + this.keyword;
-              }
-            // if(this.$gate.isAdmin()){
-              axios.get("api/member").then(({ data }) => (this.members = data.data));
-            // }
-          },
-          loadCategories(){
-              axios.get("/api/category/list").then(({ data }) => (this.categories = data.data));
-          },
-          loadTags(){
-              axios.get("/api/tag/list").then(response => {
-                  this.autocompleteItems = response.data.data.map(a => {
-                      return { text: a.name, id: a.id };
-                  });
-              }).catch(() => console.warn('Oh. Something went wrong'));
-          },
-          editModal(member){
-              this.editmode = true;
-              this.form.reset();
-              $('#addNew').modal('show');
-              this.form.fill(member);
-          },
-          createMember(){
-              this.$Progress.start();
-
-              this.form.post('api/member')
-              .then((data)=>{
-                if(data.data.success){
-                  $('#addNew').modal('hide');
-
-                  Toast.fire({
-                        icon: 'success',
-                        title: data.data.message
-                    });
-                  this.$Progress.finish();
-                  this.loadMembers();
-
-                } else {
-                  Toast.fire({
-                      icon: 'error',
-                      title: 'Some error occured! Please try again'
-                  });
-
-                  this.$Progress.failed();
-                }
-              })
-              .catch(()=>{
-
-                  Toast.fire({
-                      icon: 'error',
-                      title: 'Some error occured! Please try again'
-                  });
-              })
-          },
-          updatemember(){
-              this.$Progress.start();
-              this.form.put('api/member/'+this.form.id)
-              .then((response) => {
-                  // success
-                  $('#addNew').modal('hide');
-                  Toast.fire({
-                    icon: 'success',
-                    title: response.data.message
-                  });
-                  this.$Progress.finish();
-                      //  Fire.$emit('AfterCreate');
-
-                  this.loadMembers();
-              })
-              .catch(() => {
-                  this.$Progress.fail();
-              });
-
           },
           deleteMember(id){
               Swal.fire({
@@ -261,8 +187,8 @@
           },
             updateOption(option,text) {
                 this.search_item = option;
-                $('.search-panel span#search_concept').text(text + "年度");
-                this.keyword = text;
+                $('.search-panel span#search_concept').text(text);
+                this.keyword = '';
                 this.loadMembers();
             },
             toggleMenu() {
@@ -276,9 +202,6 @@
             this.$Progress.start();
 
             this.loadMembers();
-            this.loadCategories();
-            this.loadTags();
-
             this.$Progress.finish();
         },
         filters: {
