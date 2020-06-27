@@ -36,6 +36,7 @@ Route::apiResources([
     'user' => 'API\V1\UserController',
     'product' => 'API\V1\ProductController',
     'member' => 'API\V1\MemberController',
+    'zip2address' => 'API\V1\Zip2AddressController',
     'category' => 'API\V1\CategoryController',
     'tag' => 'API\V1\TagController',
 ]);

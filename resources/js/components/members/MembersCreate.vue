@@ -218,11 +218,23 @@
             }
         },
         watch: {
-          keyword: function (q) {
-            var app = this;
-            axios.get('/api/member?' + this.search_item + '=' + q)
-              .then(({ data }) => (this.members = data.data));	   
-          },
+            zip: function (zipcode) {
+                var url = '/api/zip2address?zipcode=' + zipcode ;                
+                var app = this;
+
+                axios.get(url)
+                .then(function (resp) {
+                    if (resp.data.results != null) {
+                        var address = resp.data.results[0].address2 + 
+                                    resp.data.results[0].address3 ;
+                        app.pref = resp.data.results[0].address1 ;
+                        app.address = address ;
+                    }
+                })
+                .catch(function (resp) {
+                    console.log(resp);
+                });
+            }
         },
         methods: {
             saveForm() {
