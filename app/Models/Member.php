@@ -15,6 +15,27 @@ class Member extends Model
      * @var array
      */
     protected $fillable = [
-        'email'
+        'id',
+        'graduate',
+        'former_name_kanji',
+        'last_name_kanji',
+        'first_name_kanji' ,
+        'former_name_kana' ,
+        'last_name_kana' ,
+        'first_name_kana'  ,
+        'gender',
+        'postcode'  ,   
+        'address'   ,
+        'phone1',
+        'phone2',
+        'email' ,
+        'club'  ,
+        'junior_high_school',
+        'couple',
+        'representative',
+        'bereau',
+        'remarks'   ,
+        'annual_fee',
+        'party_attendance',  
     ];
 }

@@ -24,7 +24,7 @@
                                   <div class="input-group-prepend">
                                     <div class="input-group-text">姓</div>
                                   </div>
-                                  <input v-model="member.last_name_kanji "type="text" class="form-control" name="last_name_kanji" placeholder="" x-autocompletetype="surname" requireddd>
+                                  <input v-model="member.last_name_kanji "type="text" class="form-control" name="last_name_kanji" placeholder="" x-autocompletetype="surname" required>
                            </div>
                               </div>
 
@@ -33,7 +33,7 @@
                                   <div class="input-group-prepend">
                                     <div class="input-group-text">名</div>
                                   </div>
-                                  <input v-model="member.first_name_kanji" type="text" class="form-control" name="first_name_kanji" placeholder="" x-autocompletetype="surname" requireddd>
+                                  <input v-model="member.first_name_kanji" type="text" class="form-control" name="first_name_kanji" placeholder="" x-autocompletetype="surname" required>
 
                                 </div>
                               </div>
@@ -49,7 +49,7 @@
                                   <div class="input-group-prepend">
                                     <div class="input-group-text">セイ</div>
                                   </div>
-                                  <input v-model="member.last_name_kana"　type="text" class="form-control" name="last_name_kana" placeholder="" x-autocompletetype="surname" requireddd>
+                                  <input v-model="member.last_name_kana"　type="text" class="form-control" name="last_name_kana" placeholder="" x-autocompletetype="surname" required>
                                 </div>
                               </div>
 
@@ -58,7 +58,7 @@
                                   <div class="input-group-prepend">
                                     <div class="input-group-text">メイ</div>
                                   </div>
-                                   <input v-model="member.first_name_kana"　type="text" class="form-control" name="first_name_kana" placeholder="" x-autocompletetype="surname" requireddd>
+                                   <input v-model="member.first_name_kana"　type="text" class="form-control" name="first_name_kana" placeholder="" x-autocompletetype="surname" required>
                                 </div>
                               </div>
                           </div>
@@ -78,7 +78,7 @@
                         <!--　メールアドレス -->
                         <div class="col-xs-12 form-group">
                             <label for="email" class="control-label">メールアドレス</label>
-                            <input v-model="member.email" type="email" class="form-control alphabet" name="email" placeholder="yoki-kana@tochiku.com" pattern="^[^0-9][a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[@][a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,4}$" x-autocompletetype="email" requireddd>
+                            <input v-model="member.email" type="email" class="form-control alphabet" name="email" placeholder="yoki-kana@tochiku.com" pattern="^[^0-9][a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[@][a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,4}$" x-autocompletetype="email" required>
                         </div>
 
                         <!-- 住所 -->
@@ -194,7 +194,7 @@
                 graduate_youngest: '',
                 graduates : [],
                 member : {
-                  'graduate' : '85',
+                  'graduate' : '',
                   'former_name_kanji'  : '',
                   'last_name_kanji'  : '',
                   'first_name_kanji' : '',
@@ -206,7 +206,7 @@
                   'address'  : '',
                   'phone1'  : '',
                   'phone2'  : '',
-                  'email'  : 'ogi@gmail.com',
+                  'email'  : '',
                   'club'  : '',
                   'junior_high_school'  : '',
                   'couple'  : '',

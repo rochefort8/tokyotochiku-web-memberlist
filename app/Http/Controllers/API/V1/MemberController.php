@@ -79,26 +79,35 @@ class MemberController extends BaseController
      */
     public function store(MemberRequest $request)
     {
-        \Log::info("STORE");
-        \Log::info($request);
 
-        /*
         $member = $this->member->create([
-            'name' => $request->get('name'),
-            'description' => $request->get('description'),
-            'price' => $request->get('price'),
-            'category_id' => $request->get('category_id'),
+            'id' => '85010',
+            'graduate' => $request->get('graduate'),
+            'former_name_kanji' => $request->get('former_name_kanji'),
+            'last_name_kanji'   => $request->get('last_name_kanji'),
+            'first_name_kanji'  => $request->get('first_name_kanji'),
+            'former_name_kana'  => $request->get('former_name_kana'),
+            'last_name_kana'    => $request->get('last_name_kana'),
+            'first_name_kana'   => $request->get('first_name_kana'),
+
+            // 'gender'            => $request->get('gender'),    
+             'gender'            => '1',    
+            'postcode'          => $request->get('postcode'),   
+            'address'           => $request->get('address'),    
+            'phone1'            => $request->get('phone1'),    
+            'phone2'            => $request->get('phone2'),    
+            'email'             => $request->get('email'),    
+            'club'              => $request->get('club'),
+            'junior_high_school'=> $request->get('junior_high_school'),
+            'couple'            => $request->get('couple'),
+            'representative'    => $request->get('representative'),
+            'bereau'            => $request->get('bereau'),
+            'remarks'           => $request->get('remarks'),
+            'annual_fee'        => $request->get('annual_fee'),
+            'party_attendance'  => $request->get('party_attendance'),      
         ]);
 
-        // update pivot table
-        $tag_ids = [];
-        foreach ($request->get('tags') as $tag) {
-            $tag_ids[] = $tag['id'];
-        }
-        $member->tags()->sync($tag_ids);
-
         return $this->sendResponse($member, 'Member Created Successfully');
-        */
     }
 
     /**
