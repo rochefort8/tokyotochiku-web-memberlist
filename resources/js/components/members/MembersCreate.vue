@@ -24,8 +24,8 @@
                                   <div class="input-group-prepend">
                                     <div class="input-group-text">姓</div>
                                   </div>
-                                  <input type="text" class="form-control" name="last_name_kanji" id="name_kanji_family" placeholder="" x-autocompletetype="surname" required>
-                                </div>
+                                  <input v-model="member.last_name_kanji "type="text" class="form-control" name="last_name_kanji" placeholder="" x-autocompletetype="surname" requireddd>
+                           </div>
                               </div>
 
                               <div class="col-sm-6">
@@ -33,7 +33,8 @@
                                   <div class="input-group-prepend">
                                     <div class="input-group-text">名</div>
                                   </div>
-                                  <input type="text" class="form-control" name="first_name_kanji" id="name_kanji_family" placeholder="" x-autocompletetype="surname" required>
+                                  <input v-model="member.first_name_kanji" type="text" class="form-control" name="first_name_kanji" placeholder="" x-autocompletetype="surname" requireddd>
+
                                 </div>
                               </div>
                           </div>
@@ -48,7 +49,7 @@
                                   <div class="input-group-prepend">
                                     <div class="input-group-text">セイ</div>
                                   </div>
-                                  <input type="text" class="form-control" name="last_name_kana" id="name_kanji_family" placeholder="" x-autocompletetype="surname" required>
+                                  <input v-model="member.last_name_kana"　type="text" class="form-control" name="last_name_kana" placeholder="" x-autocompletetype="surname" requireddd>
                                 </div>
                               </div>
 
@@ -57,7 +58,7 @@
                                   <div class="input-group-prepend">
                                     <div class="input-group-text">メイ</div>
                                   </div>
-                                   <input type="text" class="form-control" name="first_name_kana" id="name_kanji_family" placeholder="" x-autocompletetype="surname" required>
+                                   <input v-model="member.first_name_kana"　type="text" class="form-control" name="first_name_kana" placeholder="" x-autocompletetype="surname" requireddd>
                                 </div>
                               </div>
                           </div>
@@ -66,7 +67,7 @@
                         <!-- 卒業期 -->
                         <div class="form-group col-xs-12 has-feedback">
                             <label for="graduate" class="control-label">卒業期</label>
-                            <select v-model="graduate" class="form-control" x-autocompletetype="region">
+                            <select v-model="member.graduate" class="form-control" x-autocompletetype="region">
                                 <option value="" selected="selected">-- 卒業期 --</option>
                                 <option v-for="graduate in graduates" v-bind:value="graduate.value">
                                     {{ graduate.value }}期({{ graduate.string }})
@@ -77,7 +78,7 @@
                         <!--　メールアドレス -->
                         <div class="col-xs-12 form-group">
                             <label for="email" class="control-label">メールアドレス</label>
-                            <input type="email" class="form-control alphabet" name="email" id="email" placeholder="yoki-kana@tochiku.com" pattern="^[^0-9][a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[@][a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,4}$" x-autocompletetype="email" required>
+                            <input v-model="member.email" type="email" class="form-control alphabet" name="email" placeholder="yoki-kana@tochiku.com" pattern="^[^0-9][a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[@][a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,4}$" x-autocompletetype="email" requireddd>
                         </div>
 
                         <!-- 住所 -->
@@ -109,7 +110,7 @@
                         <div class="form-group col-xs-12 has-feedback">
   
                             <label for="tel" class="control-label">電話番号</label>
-                            <input type="tel" class="form-control alphabet" name="tel" id="tel" placeholder="" pattern="(0\d{1,4}[\-\s]?\d{1,4}[\-\s]\d{4})||(0{1}\d{9,10})" x-autocompletetype="phone-national">
+                            <input v-model="member.phone1" type="tel" class="form-control alphabet" name="phone1"  placeholder="" pattern="(0\d{1,4}[\-\s]?\d{1,4}[\-\s]\d{4})||(0{1}\d{9,10})" x-autocompletetype="phone-national">
                             <span class="help-block"><span class="label label-default">注</span>市外局番よりご記入ください。</span>
                             <span class="help-block">固定電話/携帯電話いずれもOKです.</span>
                         </div>                    
@@ -117,7 +118,7 @@
                         <!--　中学校 -->
                         <div class="col-xs-12 form-group">
                             <label for="junior_high_school" class="control-label">出身中学</label>                    
-                            <select name="junior_high_school" id="junior_high_school" class="form-control" x-autocompletetype="region">
+                            <select v-model="member.junior_high_school" name="junior_high_school" class="form-control" x-autocompletetype="region">
                                 <option value="" selected="selected">-- 出身中学 --</option>
                                 
                                 <option value="木屋瀬">木屋瀬</option>
@@ -130,7 +131,7 @@
                         <!--　部活動 -->
                         <div class="col-xs-12 form-group">
                             <label for="club" class="control-label">部活動</label>           
-                            <select v-model="club" options="items" class="form-control" x-autocompletetype="region">
+                            <select v-model="member.club" options="items" class="form-control" x-autocompletetype="region">
                                 <option value="" selected="selected">-- 部活動 --</option>
                                 <option v-for="club in clubs">
                                     {{ club }}
@@ -169,30 +170,7 @@
         data () {
             return {
                 editmode: false,
-                members : {},
-                current_page: 1,
-                last_page: 1,
-                total: 1,
-                from: 0,
-                to: 0,
-                keyword: '',
-                search_item: 'name',
-                categories: [],
-                form: new Form({
-                    id : '',
-                    category : '',
-                    name: '',
-                    description: '',
-                    tags:  [],
-                    photo: '',
-                    category_id: '',
-                    price: '',
-                    photoUrl: '',
-                }),
-
-                tag:  '',
-                autocompleteItems: [],
-                                   graduate : '',
+                graduate : '',
                 address : '',
                 pref : '',
                 clubs : [
@@ -214,11 +192,34 @@
                 ],
                 zip: '',
                 graduate_youngest: '',
-                graduates : []
+                graduates : [],
+                member : {
+                  'graduate' : '85',
+                  'former_name_kanji'  : '',
+                  'last_name_kanji'  : '',
+                  'first_name_kanji' : '',
+                  'former_name_kana' : '',
+                  'last_name_kana'  : '',
+                  'first_name_kana'  : '',
+                  'gender'  : '',
+                  'postcode'  : '',
+                  'address'  : '',
+                  'phone1'  : '',
+                  'phone2'  : '',
+                  'email'  : 'ogi@gmail.com',
+                  'club'  : '',
+                  'junior_high_school'  : '',
+                  'couple'  : '',
+                  'representative'  : '',
+                  'bereau'  : '',
+                  'remarks'  : '',
+                  'annual_fee'  : '',
+                  'party_attendance'  : '',
+                },
             }
         },
         watch: {
-            zip: function (zipcode) {
+           zip: function (zipcode) {
                 var url = '/api/zip2address?zipcode=' + zipcode ;                
                 var app = this;
 
@@ -238,6 +239,35 @@
         },
         methods: {
             saveForm() {
+              this.member.postcode = this.zip;
+                axios.post('/api/member',this.member)
+                .then((data)=>{
+                if(data.data.success){
+                  $('#addNew').modal('hide');
+
+                  Toast.fire({
+                        icon: 'success',
+                        title: data.data.message
+                    });
+                  this.$Progress.finish();
+                  this.loadProducts();
+
+                } else {
+                  Toast.fire({
+                      icon: 'error',
+                      title: 'Some error occured! Please try again..'
+                  });
+
+                }
+              })
+              .catch(()=>{
+
+                  Toast.fire({
+                      icon: 'error',
+                      title: 'Some error occured! Please try again'
+                  });
+              })
+
             },
             createGraduateTable: function() {
                 var _year = 1942 ;

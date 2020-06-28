@@ -42,6 +42,9 @@ class ProductController extends BaseController
      */
     public function store(ProductRequest $request)
     {
+        \Log::info("STORE");
+        \Log::info($request);
+
         $product = $this->product->create([
             'name' => $request->get('name'),
             'description' => $request->get('description'),
@@ -81,6 +84,10 @@ class ProductController extends BaseController
      */
     public function update(ProductRequest $request, $id)
     {
+
+        \Log::info("STORE");
+        \Log::info($request);
+
         $product = $this->product->findOrFail($id);
 
         $product->update($request->all());

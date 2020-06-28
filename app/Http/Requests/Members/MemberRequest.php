@@ -37,11 +37,14 @@ class MemberRequest extends FormRequest
     public function createRules(): array
     {
         return [
-            'category_id' => 'required|integer|exists:categories,id',
-            'name' => 'required|string|max:191',
-            'description' => 'required|string|max:1000',
-            'price' => 'required|numeric',
-            'tags' => 'required|array',
+            'last_name_kana' => 'required|string|max:191',
+            'first_name_kana' => 'required|string|max:191',
+            'email'     => 'required|string|max:191',
+            'graduate'  => 'required|string|max:3',
+
+//            'description' => 'required|string|max:1000',
+//            'price' => 'required|numeric',
+//            'tags' => 'required|array',
             // 'photo' => 'sometimes|files',
         ];
     }
@@ -54,12 +57,10 @@ class MemberRequest extends FormRequest
     public function updateRules(): array
     {
         return [
-            'category_id' => 'required|integer|exists:categories,id',
-            'name' => 'required|string|max:191',
-            'description' => 'required|string|max:1000',
-            'price' => 'required|numeric',
-            'tags' => 'required|array',
-            // 'photo' => 'sometimes|files',
+            'last_name_kana' => 'required|string|max:191',
+            'first_name_kana' => 'required|string|max:191',
+            'email'     => 'required|string|max:191',
+            'graduate'  => 'required|string|max:3',
         ];
     }
 }

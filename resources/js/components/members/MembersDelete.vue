@@ -59,6 +59,11 @@
                                 </tr>
                             </tbody>
                         </table>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button v-show="editmode" type="submit" class="btn btn-success">Update</button>
+                            <button v-show="!editmode" type="submit" class="btn btn-primary">Create</button>
+                        </div>
                     </form>
 
                 </div>
@@ -102,15 +107,37 @@
         methods: {
             saveForm() {
                 var app = this;
-                var newMember = app.member;
-                axios.patch('/api/v1/members/' + app.memberId, newMember)
-                    .then(function (resp) {
-                        app.$router.replace('/');
-                    })
-                    .catch(function (resp) {
-                        console.log(resp);
-                        alert("Could not create your member");
+                var newMember = this.member;
+
+                axios.post('/api/member',this.member)
+
+//                axios.put('/api/member/85042')
+                .then((data)=>{
+                if(data.data.success){
+                  $('#addNew').modal('hide');
+
+                  Toast.fire({
+                        icon: 'success',
+                        title: data.data.message
                     });
+                  this.$Progress.finish();
+                  this.loadProducts();
+
+                } else {
+                  Toast.fire({
+                      icon: 'error',
+                      title: 'Some error occured! Please try again..'
+                  });
+
+                }
+              })
+              .catch(()=>{
+
+                  Toast.fire({
+                      icon: 'error',
+                      title: 'Some error occured! Please try again'
+                  });
+              })
             }
         }
     }

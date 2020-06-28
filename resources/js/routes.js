@@ -8,7 +8,7 @@ export default [
     { path: '/members', component: require('./components/members/Members.vue').default },
     { path: '/members/edit', component: require('./components/members/MembersEdit.vue').default },
     { path: '/members/create', component: require('./components/members/MembersCreate.vue').default },
-    { path: '/members/view', component: require('./components/members/MembersView.vue').default, name : 'memberView' },
+    { path: '/members/view', component: require('./components/members/MembersView.vue').default },
     { path: '/members/delete', component: require('./components/members/MembersDelete.vue').default },
 
     { path: '/annualfee', component: require('./components/annualfee/AnnualFee.vue').default },

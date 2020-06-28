@@ -79,6 +79,10 @@ class MemberController extends BaseController
      */
     public function store(MemberRequest $request)
     {
+        \Log::info("STORE");
+        \Log::info($request);
+
+        /*
         $member = $this->member->create([
             'name' => $request->get('name'),
             'description' => $request->get('description'),
@@ -94,6 +98,7 @@ class MemberController extends BaseController
         $member->tags()->sync($tag_ids);
 
         return $this->sendResponse($member, 'Member Created Successfully');
+        */
     }
 
     /**
@@ -118,6 +123,9 @@ class MemberController extends BaseController
      */
     public function update(MemberRequest $request, $id)
     {
+        \Log::info("UPDATE");
+        \Log::info($request);
+
         $member = $this->member->findOrFail($id);
 
         $member->update($request->all());
