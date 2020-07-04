@@ -103,8 +103,13 @@
                                 </tr>
                             </tbody>
                         </table>
-                    </form>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button v-show="editmode" type="submit" class="btn btn-success">Update</button>
+                            <button v-show="!editmode" type="submit" class="btn btn-primary">Delete</button>
+                        </div>
 
+                    </form>
                 </div>
                 <!-- /.card-body -->
                             
@@ -147,9 +152,9 @@
             saveForm() {
                 var app = this;
                 var newMember = app.member;
-                axios.patch('/api/v1/members/' + app.memberId, newMember)
+                axios.put('/api/member/' + this.member.id, this.member)
                     .then(function (resp) {
-                        app.$router.replace('/');
+                        app.$router.replace('/members');
                     })
                     .catch(function (resp) {
                         console.log(resp);

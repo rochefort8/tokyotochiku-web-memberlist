@@ -159,12 +159,13 @@ class MemberController extends BaseController
         $member->update($request->all());
 
         // update pivot table
+/*        
         $tag_ids = [];
         foreach ($request->get('tags') as $tag) {
             $tag_ids[] = $tag['id'];
         }
         $member->tags()->sync($tag_ids);
-
+*/
         return $this->sendResponse($member, 'Member Information has been updated');
     }
 
@@ -175,8 +176,6 @@ class MemberController extends BaseController
      */
     public function destroy($id)
     {
-
-        \Log::info($id);
 
         $this->authorize('isAdmin');
 
