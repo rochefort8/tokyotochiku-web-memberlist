@@ -60,6 +60,10 @@
                                 </tr>
                             </tbody>
                         </table>
+                        <div class="modal-footer">
+                            <router-link to="/members" class="btn btn-default">戻る</router-link>
+                            <router-link :to="{path: '/members/edit', query: {id: member.id}}"　class="btn btn-default">編集</router-link>
+                        </div>
                     </form>
 
                 </div>

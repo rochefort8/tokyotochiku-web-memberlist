@@ -1,135 +1,305 @@
 <template>
-    <section class="content">
-        <div class="container-fluid">
-            <div class="row">
+  <section class="content">
+    <div class="container-fluid">
+        <div class="row">
 
-            <div class="col-12">
-            
-                <div class="card">
-                
-                <!-- /.card-header -->
-                <div class="card-body table-responsive p-0">
-                    <div class="card-header">
-                        <h1>編集</h1>
-                    </div>
+          <div class="col-12">
+        
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">新規登録</h3>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body table-responsive p-0">
 
-                    <form @submit.prevent="saveForm()">
+                <form @submit.prevent="saveForm()">
+                    <div class="modal-body">
 
-                        <table class="table">
-                            <tbody>
-                                <tr>
-                                    <th>お名前(漢字)</th>
-                                    <td>{{ member.last_name_kanji }} {{ member.first_name_kanji }}</td>
-                                    <td>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>お名前(カナ)</th>
-                                    <td>{{ member.last_name_kana }} {{ member.first_name_kana }}</td>
-                                    <td>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>卒業期</th>
-                                    <td>{{ member.graduate }}期</td>
-                                    <td>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>住所</th>
-                                    <td>{{ member.postcode }}<br>{{ member.address }}</td>
-                                    <td>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>メールアドレス</th>
-                                    <td>
-                                        <div v-if="show">{{ member.email }}</div>
-                                        <div v-else><input type="text" v-model="member.email" class="form-control"></div>
-                                    </td>
-                                    <td>
-                                        <button type="button" class="btn btn-xs btn-default" @click="show = !show"><i class="glyphicon glyphicon-pencil"></i></button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>電話番号1</th>
-                                    <td>{{ member.phone1 }}</td>
-                                    <td>
-                                        <button type="button" class="btn btn-xs btn-default"  @click="show = !show"><i class="glyphicon glyphicon-pencil"></i></button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>電話番号2</th>
-                                    <td>{{ member.phone2 }}</td>
-                                    <td>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>出身中学</th>
-                                    <td>{{ member.junior_high_school }}</td>
-                                    <td>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>部活動</th>
-                                    <td>{{ member.club }}</td>
-                                    <td>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>夫婦</th>
-                                    <td>{{ member.couple }}</td>
-                                    <td>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>ID</th>
-                                    <td>{{ member.id }}</td>
-                                    <td>
-                                    </td>
-                                </tr>
+                        <div class="col-xs-12 form-group">
+                            <label class="control-label">お名前（漢字）</label>    
+                            <div class="form-row align-items-center">
+                              <div class="col-sm-6">
 
-                                <tr>
-                                    <th>期別幹事</th>
-                                    <td>{{ member.representative }}</td>
-                                    <td>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>備考</th>
-                                    <td>{{ member.remarks }}</td>
-                                    <td>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button v-show="editmode" type="submit" class="btn btn-success">Update</button>
-                            <button v-show="!editmode" type="submit" class="btn btn-primary">Delete</button>
+                                <div class="input-group">
+                                  <div class="input-group-prepend">
+                                    <div class="input-group-text">姓</div>
+                                  </div>
+                                  <input v-model="member.last_name_kanji "type="text" class="form-control" name="last_name_kanji" placeholder="" x-autocompletetype="surname" required>
+                           </div>
+                              </div>
+
+                              <div class="col-sm-6">
+                                <div class="input-group">
+                                  <div class="input-group-prepend">
+                                    <div class="input-group-text">名</div>
+                                  </div>
+                                  <input v-model="member.first_name_kanji" type="text" class="form-control" name="first_name_kanji" placeholder="" x-autocompletetype="surname" required>
+
+                                </div>
+                              </div>
+                          </div>
+                        </div>  
+
+                        <div class="col-xs-12 form-group">
+                            <label class="control-label">お名前（カナ）</label>    
+                            <div class="form-row align-items-center">
+                              <div class="col-sm-6">
+
+                                <div class="input-group">
+                                  <div class="input-group-prepend">
+                                    <div class="input-group-text">セイ</div>
+                                  </div>
+                                  <input v-model="member.last_name_kana"　type="text" class="form-control" name="last_name_kana" placeholder="" x-autocompletetype="surname" required>
+                                </div>
+                              </div>
+
+                              <div class="col-sm-6">
+                                <div class="input-group">
+                                  <div class="input-group-prepend">
+                                    <div class="input-group-text">メイ</div>
+                                  </div>
+                                   <input v-model="member.first_name_kana"　type="text" class="form-control" name="first_name_kana" placeholder="" x-autocompletetype="surname" required>
+                                </div>
+                              </div>
+                          </div>
+                        </div>  
+
+                        <!-- 卒業期 -->
+                        <div class="form-group col-xs-12 has-feedback">
+                            <label for="graduate" class="control-label">卒業期</label>
+                            <select v-model="member.graduate" class="form-control" x-autocompletetype="region">
+                                <option value="" selected="selected">-- 卒業期 --</option>
+                                <option v-for="graduate in graduates" v-bind:value="graduate.value">
+                                    {{ graduate.value }}期({{ graduate.string }})
+                                </option>
+                            </select>
                         </div>
 
-                    </form>
-                </div>
-                <!-- /.card-body -->
-                            
-                <div class="card-footer">
+                        <!--　メールアドレス -->
+                        <div class="col-xs-12 form-group">
+                            <label for="email" class="control-label">メールアドレス</label>
+                            <input v-model="member.email" type="email" class="form-control alphabet" name="email" placeholder="yoki-kana@tochiku.com" pattern="^[^0-9][a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[@][a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,4}$" x-autocompletetype="email" required>
+                        </div>
 
-                </div>
-                <!-- /.card -->
-            </div>
-            </div>
-        </div>
-        </div>
-    </section>
+                        <!-- 住所 -->
+                        <div class="form-group col-xs-12 has-feedback">
+                            <label for="zip" class="control-label">郵便番号</label>
+                            <input type="text" class="form-control alphabet" name="zip" v-model="zip" placeholder="xxx-xxxx" pattern="\d{3}[\-\s]?\d{4}" x-autocompletetype="postal-code">
+                          
+                            <span class="help-block">入力後に住所が自動入力されます</span>
+                        </div>
+                        <div class="form-group col-xs-12 has-feedback">
+                            <label for="pref" class="control-label">都道府県</label>
+                            <select v-model="pref" class="form-control" x-autocompletetype="region">
+                                <option value="" selected="selected">-- 都道府県 --</option>
+                                <optgroup v-for="region,i in regions":label="region">
+                                    <option v-for="pref in prefs[i++]">
+                                        {{ pref }}
+                                    </option>
+                                </optgroup>
+                            </select>
+                        </div>
+                        <div class="form-group col-xs-12 has-feedback">
+                            <label for="address" class="control-label">市区町村/番地</label>
+                            <input type="text" class="form-control" v-model="address" x-autocompletetype="street-address">
+                        </div>
+                        <div class="form-group col-xs-12 has-feedback"> 
+                           <label for="building" class="control-label">建物名など</label>
+                            <input type="text" class="form-control" name="building" id="building">
+                        </div>
+                        <div class="form-group col-xs-12 has-feedback">
+  
+                            <label for="tel" class="control-label">電話番号</label>
+                            <input v-model="member.phone1" type="tel" class="form-control alphabet" name="phone1"  placeholder="" pattern="(0\d{1,4}[\-\s]?\d{1,4}[\-\s]\d{4})||(0{1}\d{9,10})" x-autocompletetype="phone-national">
+                            <span class="help-block"><span class="label label-default">注</span>市外局番よりご記入ください。</span>
+                            <span class="help-block">固定電話/携帯電話いずれもOKです.</span>
+                        </div>                    
 
+                        <!--　中学校 -->
+                        <div class="col-xs-12 form-group">
+                            <label for="junior_high_school" class="control-label">出身中学</label>                    
+                            <select v-model="member.junior_high_school" name="junior_high_school" class="form-control" x-autocompletetype="region">
+                                <option value="" selected="selected">-- 出身中学 --</option>
+                                
+                                <option value="木屋瀬">木屋瀬</option>
+                                <option value="引野">引野</option>
+                                <option value="岡垣">岡垣</option>
+                                <option value="0">不明</option>
+                            </select>
+                        </div>
+
+                        <!--　部活動 -->
+                        <div class="col-xs-12 form-group">
+                            <label for="club" class="control-label">部活動</label>           
+                            <select v-model="member.club" options="items" class="form-control" x-autocompletetype="region">
+                                <option value="" selected="selected">-- 部活動 --</option>
+                                <option v-for="club in clubs">
+                                    {{ club }}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button v-show="editmode" type="submit" class="btn btn-success">Update</button>
+                        <button v-show="!editmode" type="submit" class="btn btn-primary">Create</button>
+                    </div>
+                  </form>
+
+              </div>
+              <!-- /.card-body -->
+                          
+              <div class="card-footer">
+
+              </div>
+            </div>
+            <!-- /.card -->
+          </div>
+        </div>
+    </div>
+  </section>
 </template>
+
 <script>
+    import VueTagsInput from '@johmun/vue-tags-input';
+
     export default {
+      components: {
+          VueTagsInput,
+        },
+        data () {
+            return {
+                editmode: false,
+                graduate : '',
+                address : '',
+                pref : '',
+                clubs : [
+                    '吹奏楽','ボート','野球',
+                ],
+                regions : [
+                    '北海道','東北','関東','北陸','中部','関西','中国','四国','九州'
+                ],
+                prefs : [
+                    ['北海道'],
+                    ['青森県','岩手県','宮城県','秋田県','山形県','福島県'],
+                    ['茨城県','栃木県','群馬県','埼玉県','千葉県','東京都','神奈川県'],
+                    ['新潟県','富山県','石川県','福井県'],
+                    ['山梨県','長野県','岐阜県','静岡県','愛知県'],
+                    ['三重県','滋賀県','京都府','大阪府','兵庫県','奈良県','和歌山県'],
+                    ['鳥取県','島根県','岡山県','広島県','山口県'],
+                    ['徳島県','香川県','愛媛県','高知県'],
+                    ['福岡県','佐賀県','長崎県','熊本県','大分県','宮崎県','鹿児島県','沖縄県']
+                ],
+                zip: '',
+                graduate_youngest: '',
+                graduates : [],
+                member : {
+                  'graduate' : '',
+                  'former_name_kanji'  : '',
+                  'last_name_kanji'  : '',
+                  'first_name_kanji' : '',
+                  'former_name_kana' : '',
+                  'last_name_kana'  : '',
+                  'first_name_kana'  : '',
+                  'gender'  : '',
+                  'postcode'  : '',
+                  'address'  : '',
+                  'phone1'  : '',
+                  'phone2'  : '',
+                  'email'  : '',
+                  'club'  : '',
+                  'junior_high_school'  : '',
+                  'couple'  : '',
+                  'representative'  : '',
+                  'bereau'  : '',
+                  'remarks'  : '',
+                  'annual_fee'  : '',
+                  'party_attendance'  : '',
+                },
+            }
+        },
+        watch: {
+           zip: function (zipcode) {
+                var url = '/api/zip2address?zipcode=' + zipcode ;                
+                var app = this;
+
+                axios.get(url)
+                .then(function (resp) {
+                    if (resp.data.results != null) {
+                        var address = resp.data.results[0].address2 + 
+                                    resp.data.results[0].address3 ;
+                        app.pref = resp.data.results[0].address1 ;
+                        app.address = address ;
+                    }
+                })
+                .catch(function (resp) {
+                    console.log(resp);
+                });
+            }
+        },
+        methods: {
+            saveForm() {
+                var app = this;
+
+              this.member.postcode = this.zip;
+                axios.put('/api/member/' + this.member.id,this.member)
+                .then((data)=>{
+                if(data.data.success){
+                  $('#addNew').modal('hide');
+
+                  Toast.fire({
+                        icon: 'success',
+                        title: data.data.message
+                    });
+                  this.$Progress.finish();
+                app.$router.replace('/members');
+
+
+                } else {
+                  Toast.fire({
+                      icon: 'error',
+                      title: 'Some error occured! Please try again..'
+                  });
+
+                }
+              })
+              .catch(()=>{
+
+                  Toast.fire({
+                      icon: 'error',
+                      title: 'Some error occured! Please try again'
+                  });
+              })
+
+            },
+            createGraduateTable: function() {
+                var _year = 1942 ;
+                var max_year = new Date().getFullYear();
+
+                for (;_year <= max_year;_year++) {
+                    var _graduate = _year - 1902 ;
+                    var _gengo = '' ;
+
+                    if (_year <= 1988) {
+                        _gengo = '昭和' + String(_year - 1925) + '年';
+                    } else
+                    if (_year <= 2018) {
+                        _gengo = '平成' + String(_year - 1988) + '年';
+                    } else {
+                        _gengo = '令和' + String(_year - 2018) + '年';
+                    }
+                    this.graduates.push({ value : String(_graduate),
+                                        string : String(_year) + '年/' + _gengo + '卒' });
+                }
+            }
+
+        },
         mounted() {
             
         },
         created() {
+            this.createGraduateTable();
+
             let app = this;
             let id = app.$route.query.id;
 
@@ -137,30 +307,17 @@
                 app.member = response.data.data.data[0];
             }).catch(() => console.warn('Oh. Something went wrong'));
         },
-        data: function () {
-            return {
-                memberId: null,
-                member: {
-                    name: '',
-                    address: '',
-                    website: '',
-                    email: '',
-                }
-            }
+        filters: {
+            truncate: function (text, length, suffix) {
+                return text.substring(0, length) + suffix;
+            },
         },
-        methods: {
-            saveForm() {
-                var app = this;
-                var newMember = app.member;
-                axios.put('/api/member/' + this.member.id, this.member)
-                    .then(function (resp) {
-                        app.$router.replace('/members');
-                    })
-                    .catch(function (resp) {
-                        console.log(resp);
-                        alert("Could not create your member");
-                    });
-            }
+        computed: {
+          filteredItems() {
+            return this.autocompleteItems.filter(i => {
+              return i.text.toLowerCase().indexOf(this.tag.toLowerCase()) !== -1;
+            });
+          },
         }
     }
 </script>
