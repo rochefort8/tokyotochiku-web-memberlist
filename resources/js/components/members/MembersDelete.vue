@@ -9,13 +9,29 @@
                 <!-- /.card-header -->
                 <div class="card-body table-responsive p-0">
                     <div class="card-header">
+                        <h1>{{this.fiscal_year}}名簿より削除</h1>
+
                         <p>{{ member.graduate }}期</p>
                         <h1>{{ member.last_name_kanji }} {{ member.first_name_kanji }}</h1>
                         <p class="lead">{{ member.last_name_kana }} {{ member.first_name_kana }}</p>
                     </div>
                     <form @submit.prevent="saveForm()">
+
+
+                        <!--　削除理由 -->
+                        <div class="col-xs-12 form-group">
+                            <label for="club" class="control-label">削除理由</label>           
+                            <select v-model="member.deleted" options="items" class="form-control" x-autocompletetype="region">
+                                <option value="" selected="selected">-- 削除理由 --</option>
+                                <option v-for="reason in reasons">
+                                    {{ reason }}
+                                </option>
+                            </select>
+                        </div>
+
                         <table class="table">
                             <tbody>
+
                                 <tr>
                                     <th>住所</th>
                                     <td>{{ member.postcode }}<br>{{ member.address }}</td>
@@ -62,7 +78,7 @@
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             <button v-show="editmode" type="submit" class="btn btn-success">Update</button>
-                            <button v-show="!editmode" type="submit" class="btn btn-primary">Create</button>
+                            <button v-show="!editmode" type="submit" class="btn btn-primary">Delete</button>
                         </div>
                     </form>
 
@@ -101,17 +117,20 @@
                     address: '',
                     website: '',
                     email: '',
-                }
+                },
+                reasons : [
+                    '本人希望','ご逝去','その他',
+                ],
             }
         },
         methods: {
             saveForm() {
+ 
                 var app = this;
                 var newMember = this.member;
 
-                axios.post('/api/member',this.member)
+                axios.delete('/api/member/' + this.member.id)
 
-//                axios.put('/api/member/85042')
                 .then((data)=>{
                 if(data.data.success){
                   $('#addNew').modal('hide');
@@ -121,7 +140,6 @@
                         title: data.data.message
                     });
                   this.$Progress.finish();
-                  this.loadProducts();
 
                 } else {
                   Toast.fire({

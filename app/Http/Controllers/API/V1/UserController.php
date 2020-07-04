@@ -88,6 +88,8 @@ class UserController extends BaseController
     public function destroy($id)
     {
 
+        \Log::info($id);
+
         $this->authorize('isAdmin');
 
         $user = User::findOrFail($id);

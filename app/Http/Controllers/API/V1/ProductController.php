@@ -107,8 +107,12 @@ class ProductController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
+    
     public function destroy($id)
     {
+
+        \Log::info($id);
+
 
         $this->authorize('isAdmin');
 

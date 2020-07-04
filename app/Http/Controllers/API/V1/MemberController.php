@@ -31,6 +31,8 @@ class MemberController extends BaseController
     {
         $query = $this->member->query() ;
 
+        # Remove illegal ID
+        $query->where('id', '!=', ' ');
         \Log::info($request);
 
         # Query 
@@ -39,7 +41,15 @@ class MemberController extends BaseController
             $value = $request[$str] ;
             if (!empty($value)) {
                 $query->where($str,'like','%'.$value.'%');
+
+                if (!strcmp($str,'graduate')) {
+                    $m = $query->latest()->get() ;
+                    $m = $query->orderBy('id','desc')->limit(1)->get();
+                    \Log::info($m[0]['id']);
+
+                }        
             }    
+
         }
 
         # QUery both phone 1 and 2
@@ -65,7 +75,7 @@ class MemberController extends BaseController
 
         $members = $query->latest()->paginate(10) ;  
 
-        \Log::info($members);
+//        \Log::info($members);
 
 
         return $this->sendResponse($members, 'Member listt');
@@ -79,9 +89,18 @@ class MemberController extends BaseController
      */
     public function store(MemberRequest $request)
     {
+        $graduate = $request->get('graduate');
+
+        # generate ID
+        $query = $this->member->query()->where('id', '!=', ' ');
+        $query->where('graduate', $graduate );
+        $ids = $query->orderBy('id','desc')->limit(1)->get();
+        $id = $ids[0]['id']+1 ;
+        
+        \Log::info($id);
 
         $member = $this->member->create([
-            'id' => '85010',
+            'id' => $id,
             'graduate' => $request->get('graduate'),
             'former_name_kanji' => $request->get('former_name_kanji'),
             'last_name_kanji'   => $request->get('last_name_kanji'),
@@ -91,7 +110,7 @@ class MemberController extends BaseController
             'first_name_kana'   => $request->get('first_name_kana'),
 
             // 'gender'            => $request->get('gender'),    
-             'gender'            => '1',    
+             'gender'            => '0',    
             'postcode'          => $request->get('postcode'),   
             'address'           => $request->get('address'),    
             'phone1'            => $request->get('phone1'),    
@@ -156,6 +175,8 @@ class MemberController extends BaseController
      */
     public function destroy($id)
     {
+
+        \Log::info($id);
 
         $this->authorize('isAdmin');
 
