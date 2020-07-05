@@ -16,6 +16,7 @@ class CreateMembersTable extends Migration
         Schema::create('members', function (Blueprint $table) {
             $table->string('graduate')->nullable();
             $table->string('id')->nullable();
+            $table->string('removed')->nullable();
             $table->string('former_name_kanji')->nullable();
             $table->string('last_name_kanji')->nullable();
             $table->string('first_name_kanji')->nullable();
@@ -23,8 +24,10 @@ class CreateMembersTable extends Migration
             $table->string('last_name_kana')->nullable();
             $table->string('first_name_kana')->nullable();
             $table->string('gender')->nullable();                   
-            $table->string('postcode')->nullable();
-            $table->string('address')->nullable();
+            $table->string('zipcode')->nullable();
+            $table->string('address1')->nullable();
+            $table->string('address2')->nullable();
+            $table->string('address3')->nullable();
             $table->string('phone1')->nullable();
             $table->string('phone2')->nullable();
             $table->string('email')->nullable();

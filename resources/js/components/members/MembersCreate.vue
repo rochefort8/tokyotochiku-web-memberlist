@@ -81,7 +81,7 @@
                             <input v-model="member.email" type="email" class="form-control alphabet" name="email" placeholder="yoki-kana@tochiku.com" pattern="^[^0-9][a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[@][a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,4}$" x-autocompletetype="email" required>
                         </div>
 
-                        <!-- 住所 -->
+                         <!-- 住所 -->
                         <div class="form-group col-xs-12 has-feedback">
                             <label for="zip" class="control-label">郵便番号</label>
                             <input type="text" class="form-control alphabet" name="zip" v-model="zip" placeholder="xxx-xxxx" pattern="\d{3}[\-\s]?\d{4}" x-autocompletetype="postal-code">
@@ -90,7 +90,7 @@
                         </div>
                         <div class="form-group col-xs-12 has-feedback">
                             <label for="pref" class="control-label">都道府県</label>
-                            <select v-model="pref" class="form-control" x-autocompletetype="region">
+                            <select v-model="member.address1" class="form-control" x-autocompletetype="region">
                                 <option value="" selected="selected">-- 都道府県 --</option>
                                 <optgroup v-for="region,i in regions":label="region">
                                     <option v-for="pref in prefs[i++]">
@@ -101,24 +101,29 @@
                         </div>
                         <div class="form-group col-xs-12 has-feedback">
                             <label for="address" class="control-label">市区町村/番地</label>
-                            <input type="text" class="form-control" v-model="address" x-autocompletetype="street-address">
+                            <input type="text" class="form-control" v-model="member.address2" x-autocompletetype="street-address">
                         </div>
                         <div class="form-group col-xs-12 has-feedback"> 
                            <label for="building" class="control-label">建物名など</label>
-                            <input type="text" class="form-control" name="building" id="building">
+                            <input type="text" class="form-control" v-model="member.address3" x-autocompletetype="street-address">
                         </div>
                         <div class="form-group col-xs-12 has-feedback">
   
-                            <label for="tel" class="control-label">電話番号</label>
-                            <input v-model="member.phone1" type="tel" class="form-control alphabet" name="phone1"  placeholder="" pattern="(0\d{1,4}[\-\s]?\d{1,4}[\-\s]\d{4})||(0{1}\d{9,10})" x-autocompletetype="phone-national">
+                            <label for="tel" class="control-label">電話番号1</label>
+                            <input v-model="member.phone1" type="tel" class="form-control alphabet" placeholder="" pattern="(0\d{1,4}[\-\s]?\d{1,4}[\-\s]\d{4})||(0{1}\d{9,10})" x-autocompletetype="phone-national">
                             <span class="help-block"><span class="label label-default">注</span>市外局番よりご記入ください。</span>
-                            <span class="help-block">固定電話/携帯電話いずれもOKです.</span>
+                        </div>                    
+                        <div class="form-group col-xs-12 has-feedback">
+  
+                            <label for="tel" class="control-label">電話番号2</label>
+                            <input v-model="member.phone2" type="tel" class="form-control alphabet"  placeholder="" pattern="(0\d{1,4}[\-\s]?\d{1,4}[\-\s]\d{4})||(0{1}\d{9,10})" x-autocompletetype="phone-national">
+                            <span class="help-block"><span class="label label-default">注</span>市外局番よりご記入ください。</span>
                         </div>                    
 
                         <!--　中学校 -->
                         <div class="col-xs-12 form-group">
                             <label for="junior_high_school" class="control-label">出身中学</label>                    
-                            <select v-model="member.junior_high_school" name="junior_high_school" class="form-control" x-autocompletetype="region">
+                            <select v-model="member.junior_high_school" class="form-control" x-autocompletetype="region">
                                 <option value="" selected="selected">-- 出身中学 --</option>
                                 
                                 <option value="木屋瀬">木屋瀬</option>
@@ -202,8 +207,10 @@
                   'last_name_kana'  : '',
                   'first_name_kana'  : '',
                   'gender'  : '',
-                  'postcode'  : '',
-                  'address'  : '',
+                  'zipcode'  : '',
+                  'address1'  : '',
+                  'address2'  : '',
+                  'address3'  : '',
                   'phone1'  : '',
                   'phone2'  : '',
                   'email'  : '',
@@ -219,7 +226,7 @@
             }
         },
         watch: {
-           zip: function (zipcode) {
+            zip: function (zipcode) {
                 var url = '/api/zip2address?zipcode=' + zipcode ;                
                 var app = this;
 
@@ -228,8 +235,8 @@
                     if (resp.data.results != null) {
                         var address = resp.data.results[0].address2 + 
                                     resp.data.results[0].address3 ;
-                        app.pref = resp.data.results[0].address1 ;
-                        app.address = address ;
+                        app.member.address1 = resp.data.results[0].address1 ;
+                        app.member.address2 = address ;
                     }
                 })
                 .catch(function (resp) {
@@ -239,7 +246,7 @@
         },
         methods: {
             saveForm() {
-              this.member.postcode = this.zip;
+              this.member.zipcode = this.zip;
                 axios.post('/api/member',this.member)
                 .then((data)=>{
                 if(data.data.success){

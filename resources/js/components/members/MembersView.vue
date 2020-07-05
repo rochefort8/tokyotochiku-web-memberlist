@@ -19,7 +19,7 @@
                             <tbody>
                                 <tr>
                                     <th>住所</th>
-                                    <td>{{ member.postcode }}<br>{{ member.address }}</td>
+                                    <td>{{ member.zipcode }}<br>{{ member.address1 }}{{ member.address2 }}{{ member.address3 }}</td>
                                 </tr>
                                 <tr>
                                     <th>メールアドレス</th>

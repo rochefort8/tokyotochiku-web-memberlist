@@ -34,7 +34,7 @@
 
                                 <tr>
                                     <th>住所</th>
-                                    <td>{{ member.postcode }}<br>{{ member.address }}</td>
+                                    <td>{{ member.zipcode }}<br>{{ member.address }}</td>
                                 </tr>
                                 <tr>
                                     <th>メールアドレス</th>

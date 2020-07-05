@@ -36,7 +36,8 @@ class MemberController extends BaseController
         \Log::info($request);
 
         # Query 
-        $keywords = [ 'email', 'address', 'graduate', 'junior_high_school', 'club', 'annual_fee', 'id'];
+        # TODO : 'address1', 'address2', 'address3'
+        $keywords = [ 'email', 'graduate', 'junior_high_school', 'club', 'annual_fee', 'id'];
         foreach($keywords as $str) {   
             $value = $request[$str] ;
             if (!empty($value)) {
@@ -100,8 +101,9 @@ class MemberController extends BaseController
         \Log::info($id);
 
         $member = $this->member->create([
-            'id' => $id,
-            'graduate' => $request->get('graduate'),
+            'id'                => $id,
+            'graduate'          => $request->get('graduate'),
+            'removed'           => '',
             'former_name_kanji' => $request->get('former_name_kanji'),
             'last_name_kanji'   => $request->get('last_name_kanji'),
             'first_name_kanji'  => $request->get('first_name_kanji'),
@@ -110,9 +112,11 @@ class MemberController extends BaseController
             'first_name_kana'   => $request->get('first_name_kana'),
 
             // 'gender'            => $request->get('gender'),    
-             'gender'            => '0',    
-            'postcode'          => $request->get('postcode'),   
-            'address'           => $request->get('address'),    
+            'gender'           => '0',    
+            'zipcode'           => $request->get('zipcode'),   
+            'address1'          => $request->get('address1'),    
+            'address2'          => $request->get('address2'),    
+            'address3'          => $request->get('address3'),    
             'phone1'            => $request->get('phone1'),    
             'phone2'            => $request->get('phone2'),    
             'email'             => $request->get('email'),    
