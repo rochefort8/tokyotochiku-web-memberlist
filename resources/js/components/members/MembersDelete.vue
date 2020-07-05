@@ -21,7 +21,7 @@
                         <!--　削除理由 -->
                         <div class="col-xs-12 form-group">
                             <label for="removed" class="control-label">削除理由</label>           
-                            <select v-model="member.removed" options="items" class="form-control" x-autocompletetype="region">
+                            <select v-model="member.removed" options="items" class="form-control" x-autocompletetype="region" required>
                                 <option value="" selected="selected">-- 削除理由 --</option>
                                 <option v-for="reason in reasons">
                                     {{ reason }}
