@@ -84,7 +84,7 @@ class MemberController extends BaseController
                     ->where('removed',$removed_cond_str,NULL);
         }
         
-        $members = $query->latest()->paginate(10) ;  
+        $members = $query->orderBy('id','asc')->paginate(10) ;  
 
 //        \Log::info($members);
 
@@ -164,6 +164,9 @@ class MemberController extends BaseController
      */
     public function update(MemberRequest $request, $id)
     {
+
+        \Log::info($id);
+        \Log::info($request);
 
         $member = $this->member->findOrFail($id);
 

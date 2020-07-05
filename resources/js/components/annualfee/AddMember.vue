@@ -7,20 +7,9 @@
         
             <div class="card">
               <div class="card-header">
-              <!--
-                <h1 class="card-title">{{this.fiscal_year}}年度年会費支払者リスト</h1>
-              -->
-                <h1>{{this.fiscal_year}}年度年会費支払者リスト</h1>
+                <h3 class="card-title">Member List</h3>
 
                 <div class="card-tools">
-                  
-                  <router-link to="/annualfee/add" class="btn btn-default">新規登録</router-link>
-                  <!--
-                  <button type="button" class="btn btn-sm btn-primary" @click="/annualfee/add">
-                      <i class="fa fa-plus-square"></i>
-                      Add New
-                  </button>
-                  -->
                 </div>
 
                 <div class="input-group">
@@ -80,9 +69,10 @@
                           <i class="fa fa-eye green"></i>
                         </router-link>
 
-                        <router-link :to="{path: 'members/delete', query: {id: member.id}}"> 
-                          <i class="fa fa-trash red"></i>
-                        </router-link>
+                        <a href="#" @click="editModal(member)">
+                            <i class="fa fa-edit blue"></i>
+                        </a>
+
                       </td>
                     </tr>
                   </tbody>
@@ -93,12 +83,55 @@
               
               <div class="card-footer">
                 <div style="margin-top: 40px" class="col-sm-6 text-right">全 {{total}} 件中 {{from}} 〜 {{to}} 件表示</div>
-                <pagination :data="members" :limit=2 @pagination-change-page="loadMembers"></pagination>
+                <pagination :data="members" :limit=2 @pagination-change-page="getResults"></pagination>
               </div>
             </div>
             <!-- /.card -->
           </div>
         </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="addNew" tabindex="-1" role="dialog" aria-labelledby="addNew" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <p>{{ form.graduate }}期</p>
+                    <h1>{{ form.last_name_kanji }} {{ form.first_name_kanji }}</h1>
+                    <p class="lead">{{ form.last_name_kana }} {{ form.first_name_kana }}</p>
+                </div>
+
+                <form @submit.prevent="updateMember()">
+                    <div class="modal-body">
+                        <div class="form-group">
+
+                            <label>支払方法</label>
+<!--
+                            <select class="form-control" v-model="form.category_id">
+                              <option 
+                                  v-for="(cat,index) in categories" :key="index"
+                                  :value="index"
+                                  :selected="index == form.category_id">{{ cat }}</option>
+                            </select>
+                      -->
+                            <select v-model="form.payment" class="form-control" x-autocompletetype="region">
+                                <option value="B">銀行振込</option>
+                                <option value="A">郵便振替</option>
+                                <option value="G">現金</option>
+                                <option value="O">オンライン</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button v-show="editmode" type="submit" class="btn btn-success">Update</button>
+                        <button v-show="!editmode" type="submit" class="btn btn-primary">Create</button>
+                    </div>
+                  </form>
+                </div>
+            </div>
+        </div>
+
+
     </div>
   </section>
 </template>
@@ -121,18 +154,17 @@
                 to: 0,
                 keyword: '',
                 search_item: 'name',
-                fiscal_year: '',
-
+                member : [],
                 form: new Form({
-                    id : '',
-                    category : '',
-                    name: '',
-                    description: '',
-                    tags:  [],
-                    photo: '',
-                    category_id: '',
-                    price: '',
-                    photoUrl: '',
+                    id                : '',
+                    graduate          : '',
+                    last_name_kana    : '',
+                    first_name_kana   : '',
+                    last_name_kanji   : '',
+                    first_name_kanji  : '',
+                    email : '',
+                    annual_fee : '',
+                    payment : '',
                 }),
                 categories: [],
               
@@ -142,32 +174,73 @@
         },
         watch: {
           keyword: function (q) {
-            this.keyword = q ;
-            this.loadMembers();
-          }
+            var app = this;
+            axios.get('/api/member?' + this.search_item + '=' + q)
+              .then(({ data }) => (this.members = data.data));	   
+          },
         },
         methods: {
-          loadMembers(page = 1){
 
+          getResults(page = 1) {
               var app = this;
               var url = '/api/member?page=' + page ;
-              url = url + '&' + 'annual_fee=' + this.fiscal_year;
+
               if (this.keyword != "") {
                   url = url + '&' + this.search_item + '=' + this.keyword;
               }
+
               this.$Progress.start();
               axios.get(url).then(({ data }) => (this.members = data.data));
+
+
               this.$Progress.finish();
           },
-            getCurrentFiscalYear() {
-              var today = new Date();
-              var fiscal_year = today.getFullYear() ;
-              if ((today.getMonth() + 1) <= 3) {
-                fiscalyear = today.getFullYear() -1 ;
-              } 
-              this.fiscal_year = fiscal_year ;
-            },
+          loadMembers(){
 
+              if (this.keyword != "") {
+                  url = url + '&' + this.search_item + '=' + this.keyword;
+              }
+            // if(this.$gate.isAdmin()){
+              axios.get("/api/member").then(({ data }) => (this.members = data.data));
+            // }
+          },
+          loadCategories(){
+              axios.get("/api/category/list").then(({ data }) => (this.categories = data.data));
+          },
+          loadTags(){
+              axios.get("/api/tag/list").then(response => {
+                  this.autocompleteItems = response.data.data.map(a => {
+                      return { text: a.name, id: a.id };
+                  });
+              }).catch(() => console.warn('Oh. Something went wrong'));
+          },
+          editModal(member){
+              this.editmode = true;
+              this.form.reset();
+              $('#addNew').modal('show');
+              this.form.fill(member);
+          },
+          updateMember(){
+              this.$Progress.start();
+              this.form.annual_fee = '2020' + this.form.payment ;
+              this.form.put('/api/member/'+this.form.id)
+              .then((response) => {
+                  // success
+                  $('#addNew').modal('hide');
+                  Toast.fire({
+                    icon: 'success',
+                    title: response.data.message
+                  });
+                  this.$Progress.finish();
+                      //  Fire.$emit('AfterCreate');
+
+                  this.loadMembers();
+              })
+              .catch(() => {
+                  this.$Progress.fail();
+              });
+
+          },
           deleteMember(id){
               Swal.fire({
                   title: 'Are you sure?',
@@ -209,9 +282,11 @@
         },
         created() {
             this.$Progress.start();
-            this.getCurrentFiscalYear();
 
             this.loadMembers();
+            this.loadCategories();
+            this.loadTags();
+
             this.$Progress.finish();
         },
         filters: {
