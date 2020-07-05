@@ -29,12 +29,28 @@ class MemberController extends BaseController
      */
     public function index(Request $request)
     {
-        $query = $this->member->query() ;
-
-        # Remove illegal ID
-        $query->where('id', '!=', ' ');
         \Log::info($request);
 
+        $query = $this->member->query() ;
+
+
+        # Remove illegal ID
+        $query->where('id', '!=', '');
+
+        # Except removed items    
+        $str = 'removed' ;
+        $value = $request[$str] ;
+        if (!empty($request[$str])) {
+            \Log::info("AAA");
+            $query->where('removed','!=', NULL);
+
+        } else {
+            $query->where('removed',NULL);
+            \Log::info("BBB");
+
+        }   
+        
+ 
         # Query 
         # TODO : 'address1', 'address2', 'address3'
         $keywords = [ 'email', 'graduate', 'junior_high_school', 'club', 'annual_fee', 'id'];
@@ -42,19 +58,10 @@ class MemberController extends BaseController
             $value = $request[$str] ;
             if (!empty($value)) {
                 $query->where($str,'like','%'.$value.'%');
-
-                if (!strcmp($str,'graduate')) {
-                    $m = $query->latest()->get() ;
-                    $m = $query->orderBy('id','desc')->limit(1)->get();
-                    \Log::info($m[0]['id']);
-
-                }        
             }    
-
         }
 
         # QUery both phone 1 and 2
-
         $str = 'phone' ;
         $value = $request[$str] ;
         if (!empty($request[$str])) {
@@ -74,10 +81,10 @@ class MemberController extends BaseController
             $query->orWhere('last_name_kana','like','%'.$value.'%');
         }
 
+        
         $members = $query->latest()->paginate(10) ;  
 
-//        \Log::info($members);
-
+        \Log::info($members);
 
         return $this->sendResponse($members, 'Member listt');
     }
@@ -155,8 +162,6 @@ class MemberController extends BaseController
      */
     public function update(MemberRequest $request, $id)
     {
-        \Log::info("UPDATE");
-        \Log::info($request);
 
         $member = $this->member->findOrFail($id);
 

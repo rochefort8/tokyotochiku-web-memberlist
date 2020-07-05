@@ -20,8 +20,8 @@
 
                         <!--　削除理由 -->
                         <div class="col-xs-12 form-group">
-                            <label for="club" class="control-label">削除理由</label>           
-                            <select v-model="member.deleted" options="items" class="form-control" x-autocompletetype="region">
+                            <label for="removed" class="control-label">削除理由</label>           
+                            <select v-model="member.removed" options="items" class="form-control" x-autocompletetype="region">
                                 <option value="" selected="selected">-- 削除理由 --</option>
                                 <option v-for="reason in reasons">
                                     {{ reason }}
@@ -129,7 +129,9 @@
                 var app = this;
                 var newMember = this.member;
 
-                axios.delete('/api/member/' + this.member.id)
+                axios.put('/api/member/' + this.member.id,this.member)
+
+//                axios.delete('/api/member/' + this.member.id)
 
                 .then((data)=>{
                 if(data.data.success){

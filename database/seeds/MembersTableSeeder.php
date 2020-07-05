@@ -17,7 +17,7 @@ class MembersTableSeeder extends Seeder
             $member = new Member;
             $member->graduate           = $line[0] ;
             $member->id                 = $line[1] ;
-            $member->removed            = $line[2] ;
+            $member->removed            = NULL ;
             $member->former_name_kanji  = $line[3] ;
             $member->last_name_kanji    = $line[4] ;
             $member->first_name_kanji   = $line[5] ;

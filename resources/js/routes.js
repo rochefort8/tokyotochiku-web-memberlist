@@ -10,6 +10,7 @@ export default [
     { path: '/members/create', component: require('./components/members/MembersCreate.vue').default },
     { path: '/members/view', component: require('./components/members/MembersView.vue').default },
     { path: '/members/delete', component: require('./components/members/MembersDelete.vue').default },
+    { path: '/members/removed', component: require('./components/members/RemovedList.vue').default },
 
     { path: '/annualfee', component: require('./components/annualfee/AnnualFee.vue').default },
     { path: '/product/tag', component: require('./components/product/Tag.vue').default },

@@ -10,14 +10,6 @@
                 <h3 class="card-title">Member List</h3>
 
                 <div class="card-tools">
-                  <router-link to="/members/removed" class="btn btn-default">削除一覧</router-link>                  
-                  <router-link to="/members/create" class="btn btn-default">新規登録</router-link>
-                  <!--
-                  <button type="button" class="btn btn-sm btn-primary" @click="/members/create">
-                      <i class="fa fa-plus-square"></i>
-                      Add New
-                  </button>
-                  -->
                 </div>
 
                 <div class="input-group">
@@ -56,6 +48,7 @@
                       <th></th>
                       <th></th>
                       <th>性別</th>
+                      <th>削除理由</th>
                       <th>操作</th>
                   </tr>
 
@@ -70,6 +63,7 @@
                       <td>{{member.last_name_kana}}</td>
                       <td>{{member.first_name_kana}}</td>
                       <td>{{member.gender}}</td>
+                      <td>{{member.removed}}</td>
 
                       <!-- <td><img v-bind:src="'/' + member.photo" width="100" alt="member"></td> -->
                       <td>
@@ -77,13 +71,13 @@
                           <i class="fa fa-eye green"></i>
                         </router-link>
 
-                        <router-link :to="{path: 'members/edit', query: {id: member.id}}"> 
+                        <a href="#" @click="activateMember(member)">
                           <i class="fa fa-edit blue"></i>
-                        </router-link>
+                        </a>
 
-                        <router-link :to="{path: 'members/delete', query: {id: member.id}}"> 
+                        <a href="#" @click="deleteMember(member.id)">
                           <i class="fa fa-trash red"></i>
-                        </router-link>
+                        </a>
                       </td>
                     </tr>
                   </tbody>
@@ -123,18 +117,6 @@
                 keyword: '',
                 search_item: 'name',
 
-                form: new Form({
-                    id : '',
-                    category : '',
-                    name: '',
-                    description: '',
-                    tags:  [],
-                    photo: '',
-                    category_id: '',
-                    price: '',
-                    photoUrl: '',
-                }),
-                categories: [],
               
                 tag:  '',
                 autocompleteItems: [],
@@ -143,7 +125,7 @@
         watch: {
           keyword: function (q) {
             var app = this;
-            axios.get('/api/member?' + this.search_item + '=' + q)
+            axios.get('/api/member?removed=true&' + this.search_item + '=' + q)
               .then(({ data }) => (this.members = data.data));	   
           },
         },
@@ -151,7 +133,7 @@
 
           getResults(page = 1) {
               var app = this;
-              var url = '/api/member?page=' + page ;
+              var url = '/api/member?removed=true&page=' + page ;
 
               if (this.keyword != "") {
                   url = url + '&' + this.search_item + '=' + this.keyword;
@@ -169,77 +151,37 @@
                   url = url + '&' + this.search_item + '=' + this.keyword;
               }
             // if(this.$gate.isAdmin()){
-              axios.get("/api/member").then(({ data }) => (this.members = data.data));
+              axios.get("/api/member?removed=true").then(({ data }) => (this.members = data.data));
             // }
           },
-          loadCategories(){
-              axios.get("/api/category/list").then(({ data }) => (this.categories = data.data));
+          activateMember(member){
+              Swal.fire({
+                  title: 'Are you sure?',
+                  text: "You won't be able to revert this!",
+                  showCancelButton: true,
+                  confirmButtonColor: '#d33',
+                  cancelButtonColor: '#3085d6',
+                  confirmButtonText: 'Yes, delete it!'
+                  }).then((result) => {
+
+                      // Send request to the server
+                        if (result.value) {
+                            member.removed = '';
+                            axios.put('/api/member/' + member.id,member).then(()=>{
+                                    Swal.fire(
+                                      'Deleted!',
+                                      'Your file has been deleted.',
+                                      'success'
+                                      );
+                                  // Fire.$emit('AfterCreate');
+                                  this.loadMembers();
+                              }).catch((data)=> {
+                                  Swal.fire("Failed!", data.message, "warning");
+                              });
+                        }
+                  })
           },
-          loadTags(){
-              axios.get("/api/tag/list").then(response => {
-                  this.autocompleteItems = response.data.data.map(a => {
-                      return { text: a.name, id: a.id };
-                  });
-              }).catch(() => console.warn('Oh. Something went wrong'));
-          },
-          editModal(member){
-              this.editmode = true;
-              this.form.reset();
-              $('#addNew').modal('show');
-              this.form.fill(member);
-          },
-          createMember(){
-              this.$Progress.start();
 
-              this.form.post('api/member')
-              .then((data)=>{
-                if(data.data.success){
-                  $('#addNew').modal('hide');
-
-                  Toast.fire({
-                        icon: 'success',
-                        title: data.data.message
-                    });
-                  this.$Progress.finish();
-                  this.loadMembers();
-
-                } else {
-                  Toast.fire({
-                      icon: 'error',
-                      title: 'Some error occured! Please try again'
-                  });
-
-                  this.$Progress.failed();
-                }
-              })
-              .catch(()=>{
-
-                  Toast.fire({
-                      icon: 'error',
-                      title: 'Some error occured! Please try again'
-                  });
-              })
-          },
-          updatemember(){
-              this.$Progress.start();
-              this.form.put('api/member/'+this.form.id)
-              .then((response) => {
-                  // success
-                  $('#addNew').modal('hide');
-                  Toast.fire({
-                    icon: 'success',
-                    title: response.data.message
-                  });
-                  this.$Progress.finish();
-                      //  Fire.$emit('AfterCreate');
-
-                  this.loadMembers();
-              })
-              .catch(() => {
-                  this.$Progress.fail();
-              });
-
-          },
           deleteMember(id){
               Swal.fire({
                   title: 'Are you sure?',
@@ -252,7 +194,7 @@
 
                       // Send request to the server
                         if (result.value) {
-                              this.form.delete('api/member/'+id).then(()=>{
+                              axios.delete('/api/member/'+id).then(()=>{
                                       Swal.fire(
                                       'Deleted!',
                                       'Your file has been deleted.',
@@ -281,11 +223,7 @@
         },
         created() {
             this.$Progress.start();
-
             this.loadMembers();
-            this.loadCategories();
-            this.loadTags();
-
             this.$Progress.finish();
         },
         filters: {
