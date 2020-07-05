@@ -40,16 +40,11 @@ class MemberController extends BaseController
         # Except removed items    
         $str = 'removed' ;
         $value = $request[$str] ;
+        $removed_cond_str = '=';
         if (!empty($request[$str])) {
-            \Log::info("AAA");
-            $query->where('removed','!=', NULL);
-
-        } else {
-            $query->where('removed',NULL);
-            \Log::info("BBB");
-
-        }   
-        
+            $removed_cond_str = '!=';
+        } 
+        $query->where('removed',$removed_cond_str,NULL);
  
         # Query 
         # TODO : 'address1', 'address2', 'address3'
@@ -66,7 +61,9 @@ class MemberController extends BaseController
         $value = $request[$str] ;
         if (!empty($request[$str])) {
             $query->where('phone1','like','%'.$value.'%');
-            $query->orWhere('phone2','like','%'.$value.'%');
+            $query->orWhere('phone2','like','%'.$value.'%')
+                ->where('id', '!=', '')
+                ->where('removed',$removed_cond_str,NULL);
         }
       
         # Convert Kana
@@ -75,16 +72,21 @@ class MemberController extends BaseController
         if (!empty($value)) {
             $value = mb_convert_kana($value,'KC','UTF-8') ;
 
-            $query->where('first_name_kanji','like','%'.$value.'%');
-            $query->orWhere('last_name_kanji','like','%'.$value.'%');
-            $query->orWhere('first_name_kana','like','%'.$value.'%');
-            $query->orWhere('last_name_kana','like','%'.$value.'%');
+            $query->where('first_name_kanji','like','%'.$value.'%');     
+            $query->orWhere('last_name_kanji','like','%'.$value.'%')
+                    ->where('id', '!=', '')
+                    ->where('removed',$removed_cond_str,NULL);
+            $query->orWhere('first_name_kana','like','%'.$value.'%')
+                    ->where('id', '!=', '')
+                    ->where('removed',$removed_cond_str,NULL);
+            $query->orWhere('last_name_kana','like','%'.$value.'%')
+                    ->where('id', '!=', '')
+                    ->where('removed',$removed_cond_str,NULL);
         }
-
         
         $members = $query->latest()->paginate(10) ;  
 
-        \Log::info($members);
+//        \Log::info($members);
 
         return $this->sendResponse($members, 'Member listt');
     }
