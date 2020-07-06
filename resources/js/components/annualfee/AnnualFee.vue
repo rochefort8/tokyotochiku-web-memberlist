@@ -80,9 +80,9 @@
                           <i class="fa fa-eye green"></i>
                         </router-link>
 
-                        <router-link :to="{path: 'members/delete', query: {id: member.id}}"> 
-                          <i class="fa fa-trash red"></i>
-                        </router-link>
+                        <a href="#" @click="removeFromList(member)">
+                            <i class="fa fa-trash red"></i>
+                        </a>
                       </td>
                     </tr>
                   </tbody>
@@ -123,17 +123,6 @@
                 search_item: 'name',
                 fiscal_year: '',
 
-                form: new Form({
-                    id : '',
-                    category : '',
-                    name: '',
-                    description: '',
-                    tags:  [],
-                    photo: '',
-                    category_id: '',
-                    price: '',
-                    photoUrl: '',
-                }),
                 categories: [],
               
                 tag:  '',
@@ -168,10 +157,10 @@
               this.fiscal_year = fiscal_year ;
             },
 
-          deleteMember(id){
+          removeFromList(member){
               Swal.fire({
-                  title: 'Are you sure?',
-                  text: "You won't be able to revert this!",
+                  title: 'Are you sure ?',
+                  text: member.first_name_kanji,
                   showCancelButton: true,
                   confirmButtonColor: '#d33',
                   cancelButtonColor: '#3085d6',
@@ -180,7 +169,8 @@
 
                       // Send request to the server
                         if (result.value) {
-                              this.form.delete('api/member/'+id).then(()=>{
+                            member.annual_fee = '';
+                              axios.put('/api/member/' + member.id,member).then(()=>{
                                       Swal.fire(
                                       'Deleted!',
                                       'Your file has been deleted.',
