@@ -83,7 +83,7 @@ class MemberController extends BaseController
                     ->where('id', '!=', '')
                     ->where('removed',$removed_cond_str,NULL);
         }
-        
+
         $members = $query->orderBy('id','asc')->paginate(10) ;  
 
 //        \Log::info($members);

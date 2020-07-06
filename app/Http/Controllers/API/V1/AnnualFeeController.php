@@ -29,6 +29,31 @@ class AnnualFeeController extends BaseController
      */
     public function index(Request $request)
     {
+        \Log::info($request);
+
+        $query = $this->member->query() ;
+
+        # Remove illegal ID
+        $query->where('id', '!=', '');
+
+        $str = 'annual_fee' ;
+        $value = $request[$str] ;
+        if (!empty($request[$str])) {
+            $query->where($str,'like','%'.$value.'%');
+        }
+
+        $users = \DB::table('members')
+            ->where('id', '!=', '')
+            ->where('annual_fee','like','%'.$value.'%')
+            ->select(\DB::raw('count(*) as count, graduate'))
+            ->groupBy(\DB::raw('graduate'))->get();
+            
+        \Log::info($users);
+
+        $members = $query->orderBy('id','asc')->paginate(10) ;  
+
+        return $this->sendResponse($members, 'Member listt');
+
     }
 
     /**

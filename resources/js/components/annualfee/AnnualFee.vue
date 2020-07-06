@@ -7,14 +7,13 @@
         
             <div class="card">
               <div class="card-header">
-              <!--
-                <h1 class="card-title">{{this.fiscal_year}}年度年会費支払者リスト</h1>
-              -->
                 <h1>{{this.fiscal_year}}年度年会費支払者リスト</h1>
 
                 <div class="card-tools">
                   
+                  <router-link to="/annualfee/count" class="btn btn-default">期別納入者数</router-link>
                   <router-link to="/annualfee/add" class="btn btn-default">新規登録</router-link>
+
                   <!--
                   <button type="button" class="btn btn-sm btn-primary" @click="/annualfee/add">
                       <i class="fa fa-plus-square"></i>
