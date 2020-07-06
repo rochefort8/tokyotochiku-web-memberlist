@@ -94,7 +94,7 @@
               
               <div class="card-footer">
                 <div style="margin-top: 40px" class="col-sm-6 text-right">全 {{total}} 件中 {{from}} 〜 {{to}} 件表示</div>
-                <pagination :data="members" :limit=2 @pagination-change-page="getResults"></pagination>
+                <pagination :data="members" :limit=2 @pagination-change-page="loadMembers"></pagination>
               </div>
             </div>
             <!-- /.card -->
@@ -113,7 +113,6 @@
         },
         data () {
             return {
-                editmode: false,
                 members : {},
                 current_page: 1,
                 last_page: 1,
@@ -122,170 +121,37 @@
                 to: 0,
                 keyword: '',
                 search_item: 'name',
-
-                form: new Form({
-                    id : '',
-                    category : '',
-                    name: '',
-                    description: '',
-                    tags:  [],
-                    photo: '',
-                    category_id: '',
-                    price: '',
-                    photoUrl: '',
-                }),
-                categories: [],
-              
-                tag:  '',
-                autocompleteItems: [],
             }
         },
         watch: {
           keyword: function (q) {
-            var app = this;
-            axios.get('/api/member?' + this.search_item + '=' + q)
-              .then(({ data }) => (this.members = data.data));	   
+            this.keyword = q ;
+            this.loadMembers() ;
           },
         },
         methods: {
-
-          getResults(page = 1) {
+          loadMembers(page = 1){
               var app = this;
               var url = '/api/member?page=' + page ;
 
               if (this.keyword != "") {
                   url = url + '&' + this.search_item + '=' + this.keyword;
               }
-
-              this.$Progress.start();
               axios.get(url).then(({ data }) => (this.members = data.data));
-
-
-              this.$Progress.finish();
           },
-          loadMembers(){
-
-              if (this.keyword != "") {
-                  url = url + '&' + this.search_item + '=' + this.keyword;
-              }
-            // if(this.$gate.isAdmin()){
-              axios.get("/api/member").then(({ data }) => (this.members = data.data));
-            // }
+          updateOption(option,text) {
+              this.search_item = option;
+              $('.search-panel span#search_concept').text(text);
+              this.keyword = '';
+              this.loadMembers();
           },
-          loadCategories(){
-              axios.get("/api/category/list").then(({ data }) => (this.categories = data.data));
-          },
-          loadTags(){
-              axios.get("/api/tag/list").then(response => {
-                  this.autocompleteItems = response.data.data.map(a => {
-                      return { text: a.name, id: a.id };
-                  });
-              }).catch(() => console.warn('Oh. Something went wrong'));
-          },
-          editModal(member){
-              this.editmode = true;
-              this.form.reset();
-              $('#addNew').modal('show');
-              this.form.fill(member);
-          },
-          createMember(){
-              this.$Progress.start();
-
-              this.form.post('api/member')
-              .then((data)=>{
-                if(data.data.success){
-                  $('#addNew').modal('hide');
-
-                  Toast.fire({
-                        icon: 'success',
-                        title: data.data.message
-                    });
-                  this.$Progress.finish();
-                  this.loadMembers();
-
-                } else {
-                  Toast.fire({
-                      icon: 'error',
-                      title: 'Some error occured! Please try again'
-                  });
-
-                  this.$Progress.failed();
-                }
-              })
-              .catch(()=>{
-
-                  Toast.fire({
-                      icon: 'error',
-                      title: 'Some error occured! Please try again'
-                  });
-              })
-          },
-          updatemember(){
-              this.$Progress.start();
-              this.form.put('api/member/'+this.form.id)
-              .then((response) => {
-                  // success
-                  $('#addNew').modal('hide');
-                  Toast.fire({
-                    icon: 'success',
-                    title: response.data.message
-                  });
-                  this.$Progress.finish();
-                      //  Fire.$emit('AfterCreate');
-
-                  this.loadMembers();
-              })
-              .catch(() => {
-                  this.$Progress.fail();
-              });
-
-          },
-          deleteMember(id){
-              Swal.fire({
-                  title: 'Are you sure?',
-                  text: "You won't be able to revert this!",
-                  showCancelButton: true,
-                  confirmButtonColor: '#d33',
-                  cancelButtonColor: '#3085d6',
-                  confirmButtonText: 'Yes, delete it!'
-                  }).then((result) => {
-
-                      // Send request to the server
-                        if (result.value) {
-                              this.form.delete('api/member/'+id).then(()=>{
-                                      Swal.fire(
-                                      'Deleted!',
-                                      'Your file has been deleted.',
-                                      'success'
-                                      );
-                                  // Fire.$emit('AfterCreate');
-                                  this.loadMembers();
-                              }).catch((data)=> {
-                                  Swal.fire("Failed!", data.message, "warning");
-                              });
-                        }
-                  })
-          },
-            updateOption(option,text) {
-                this.search_item = option;
-                $('.search-panel span#search_concept').text(text);
-                this.keyword = '';
-                this.loadMembers();
-            },
-            toggleMenu() {
-              this.showMenu = !this.showMenu;
-            },
         },
         mounted() {
             
         },
         created() {
             this.$Progress.start();
-
             this.loadMembers();
-            this.loadCategories();
-            this.loadTags();
-
             this.$Progress.finish();
         },
         filters: {
