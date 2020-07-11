@@ -7,6 +7,9 @@ use App\Models\Member;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\MemberExport;
+
 class AnnualFeeController extends BaseController
 {
 
@@ -187,6 +190,13 @@ class AnnualFeeController extends BaseController
         $member->delete();
 
         return $this->sendResponse($member, 'Member has been Deleted');
+    }
+
+    public function export(Request $request)
+    {
+        \Log::info('Export');
+
+        return Excel::download(new MemberExport, 'output.xlsx');
     }
 
     public function upload(Request $request)

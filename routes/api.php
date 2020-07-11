@@ -32,6 +32,7 @@ Route::get('category/list', 'API\V1\CategoryController@list');
 Route::post('product/upload', 'API\V1\ProductController@upload');
 Route::post('member/upload', 'API\V1\MemberController@upload');
 Route::post('annualfee/upload', 'API\V1\AnnualFeeController@upload');
+Route::get('annualfee/export', 'API\V1\AnnualFeeController@export');
 
 Route::apiResources([
     'user' => 'API\V1\UserController',

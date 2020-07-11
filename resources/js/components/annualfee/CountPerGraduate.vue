@@ -15,12 +15,10 @@
                 <div class="card-tools">
                   
                   <router-link to="/annualfee" class="btn btn-default">納入者リスト</router-link>
-                  <!--
-                  <button type="button" class="btn btn-sm btn-primary" @click="/annualfee/add">
+                  <button type="button" class="btn btn-sm btn-primary" @click="exportData">
                       <i class="fa fa-plus-square"></i>
-                      Add New
+                      Excel
                   </button>
-                  -->
                 </div>
 
                 <div class="input-group">
@@ -142,6 +140,41 @@
               axios.get(url).then(({ data }) => (this.members = data.data));
               this.$Progress.finish();
           },
+          async exportData(){
+
+              var _url = '/api/annualfee/export' ;
+              this.$Progress.start();
+              /*
+              try {
+                const res = await axios.get(_url);
+                if(res.status === 200){
+                  window.location = res.request.responseURL
+                } else {
+                // ダウンロード失敗のメッセージって何の飾り気のないalertでも許してもらえる気がする
+                  alert("downloadに失敗しました")
+                }
+              } catch(e) {
+                alert("downloadに失敗しました")
+              }
+              */
+            axios({
+                url: _url,
+                method: 'GET',
+                responseType: 'blob',
+            }).then((response) => {
+                var fileURL = window.URL.createObjectURL(new Blob([response.data]));
+                var fileLink = document.createElement('a');
+
+                fileLink.href = fileURL;
+                fileLink.setAttribute('download', 'file.xlsx');
+                document.body.appendChild(fileLink);
+
+                fileLink.click();
+            });              
+//              axios.get(url).then(({ data }) => (this.members = data.data));
+              this.$Progress.finish();
+          },
+
             getCurrentFiscalYear() {
               var today = new Date();
               var fiscal_year = today.getFullYear() ;
