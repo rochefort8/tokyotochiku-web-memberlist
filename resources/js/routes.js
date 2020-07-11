@@ -15,7 +15,10 @@ export default [
     { path: '/annualfee', component: require('./components/annualfee/AnnualFee.vue').default },
     { path: '/annualfee/add', component: require('./components/annualfee/AddMember.vue').default },
     { path: '/annualfee/count', component: require('./components/annualfee/CountPerGraduate.vue').default },
-    
+
+    { path: '/newsletter', component: require('./components/newsletter/DeliveryList.vue').default },
+    { path: '/newsletter/undelivered', component: require('./components/newsletter/UndeliveredList.vue').default },
+
     { path: '/product/tag', component: require('./components/product/Tag.vue').default },
     { path: '/product/category', component: require('./components/product/Category.vue').default },
     { path: '*', component: require('./components/NotFound.vue').default }

@@ -45,13 +45,15 @@
                 <table class="table table-hover">
                   <thead>
                     <tr>
-                      <th>ID</th>
                       <th>卒業期</th>
-                      <th>お名前</th>
-                      <th></th>
-                      <th></th>
-                      <th></th>
-                      <th>性別</th>
+                      <th>会員数</th>
+                      <th>ゆうちょ</th>
+                      <th>銀行</th>
+                      <th>自動</th>
+                      <th>現金</th>
+                      <th>当日現金</th>
+                      <th>オンライン</th>
+                      <th>合計</th>
                       <th>操作</th>
                   </tr>
 
@@ -59,13 +61,15 @@
                   <tbody>
                      <tr v-for="member in members.data" :key="member.id">
 
-                      <td>{{member.id}}</td>
                       <td>{{member.graduate}}</td>
-                      <td>{{member.last_name_kanji}}</td>
-                      <td>{{member.first_name_kanji}}</td>
-                      <td>{{member.last_name_kana}}</td>
-                      <td>{{member.first_name_kana}}</td>
-                      <td>{{member.gender}}</td>
+                      <td>{{member.total_count}}</td>
+                      <td>{{member.post}}</td>
+                      <td>{{member.bank}}</td>
+                      <td>{{member.bank_auto}}</td>
+                      <td>{{member.cash}}</td>
+                      <td>{{member.cash_konshinkai}}</td>
+                      <td>{{member.online}}</td>
+                      <td>{{member.sum}}</td>
 
                       <!-- <td><img v-bind:src="'/' + member.photo" width="100" alt="member"></td> -->
                       <td>
@@ -73,9 +77,6 @@
                           <i class="fa fa-eye green"></i>
                         </router-link>
 
-                        <a href="#" @click="removeFromList(member)">
-                            <i class="fa fa-trash red"></i>
-                        </a>
                       </td>
                     </tr>
                   </tbody>

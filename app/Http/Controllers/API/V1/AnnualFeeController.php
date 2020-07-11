@@ -40,8 +40,7 @@ class AnnualFeeController extends BaseController
         $str = 'annual_fee' ;
         $year = $request[$str] ;
         if (!empty($request[$str])) {
-            $query->where($str,'like','%'.$year.'%');
-            
+            $query->where($str,'like','%'.$year.'%');   
         }
 
         $members = $query->get()->groupBy('graduate'); 
@@ -54,7 +53,7 @@ class AnnualFeeController extends BaseController
             \Log::info($graduate);
 
             $counts = [ 0, 0, 0, 0, 0, 0 ] ;
-
+            $sum = 0 ;
             foreach ($persons as $p) {
                 $types = [ 'A', 'B', 'C', 'D', 'E', 'F'];
                 $annual_fee = $p['annual_fee'];
@@ -64,29 +63,35 @@ class AnnualFeeController extends BaseController
 
                     if (strpos($annual_fee,$s) !== false) {
                         $counts[$pos]++ ;
+                        $sum++ ;
                         break ;
                     }
                     $pos++;    
                 }    
             }
             \Log::info($counts[0] . ':' . $counts[1] . ':' . $counts[2] . ':' . $counts[3] . ':' . $counts[4] . ':' . $counts[5]);
+            $total_count = $this->member->query()->where('graduate',$graduate)->count();
+            \Log::info($total_count);
+
             $a = array(
-                'id' => $graduate ,
-                'graduate' => $counts[0],
-                'last_name_kanji' => $counts[1],
-                'first_name_kanji' => $counts[2],
-                'last_name_kana' => $counts[3],
-                'first_name_kana' => $counts[4],
-                'gendor' => $counts[0],
+                'graduate' => $graduate ,
+                'total_count' => $total_count,
+                'post' => $counts[1],
+                'bank' => $counts[2],
+                'bank_auto' => $counts[0],
+                'cash' => $counts[4],
+                'cash_konshinkai' => $counts[5],
+                'online' => $counts[3],
+                'sum' => $sum,
             );
             array_push($g_array,$a);
         }        
 
         $members = array() ;
-        for ($g=30;$g < 118;$g++) {
+        for ($g=45;$g < 118;$g++) {
             $found='';
             foreach ($g_array as $gg) {
-                if ($gg['id'] == $g ) { 
+                if ($gg['graduate'] == $g ) { 
                 \Log::info($gg);
                 array_push($members,$gg);
                     $found='y';
@@ -94,14 +99,18 @@ class AnnualFeeController extends BaseController
                 }
             }
             if ( $found == '') {
+                $total_count = $this->member->query()->where('graduate',$g)->count();
+
                 $a = array(
-                    'id' => $g ,
-                    'graduate' => 0,
-                    'last_name_kanji' => 0,
-                    'first_name_kanji' => 0,
-                    'last_name_kana' => 0,
-                    'first_name_kana' => 0,
-                    'gendor' => 0,
+                    'graduate' => $g ,
+                    'total_count' => $total_count,
+                    'post' => 0,
+                    'bank' => 0,
+                    'bank_auto' => 0,
+                    'cash' => 0,
+                    'cash_konshinkai' => 0,
+                    'online' => 0,
+                    'sum' => 0,
                 );
                 array_push($members,$a);
             }

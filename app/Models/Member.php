@@ -39,6 +39,7 @@ class Member extends Model
         'bereau',
         'remarks'   ,
         'annual_fee',
+        'newsletter_undelivered',
         'party_attendance',  
     ];
 }

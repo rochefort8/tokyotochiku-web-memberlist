@@ -38,6 +38,7 @@ class CreateMembersTable extends Migration
             $table->string('bereau')->nullable();
             $table->string('remarks')->nullable();
             $table->string('annual_fee')->nullable();
+            $table->string('newsletter_undelivered')->nullable();
             $table->string('party_attendance')->nullable();
             $table->timestamps();
             $table->softDeletes();

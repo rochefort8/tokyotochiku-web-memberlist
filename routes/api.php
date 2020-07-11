@@ -38,6 +38,7 @@ Route::apiResources([
     'product' => 'API\V1\ProductController',
     'member' => 'API\V1\MemberController',
     'annualfee' => 'API\V1\AnnualFeeController',
+    'newsletter' => 'API\V1\NewsLetterController',
     'zip2address' => 'API\V1\Zip2AddressController',
     'category' => 'API\V1\CategoryController',
     'tag' => 'API\V1\TagController',

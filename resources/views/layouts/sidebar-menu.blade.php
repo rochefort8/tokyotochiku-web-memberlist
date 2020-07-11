@@ -31,7 +31,7 @@
       </li>
 
       <li class="nav-item">
-        <router-link to="/members" class="nav-link">
+        <router-link to="/newsletter" class="nav-link">
           <i class="nav-icon fas fa-list orange"></i>
           <p>会報送付</p>
         </router-link>
