@@ -6,6 +6,12 @@ use App\Http\Requests\Members\MemberRequest;
 use App\Models\Member;
 use Illuminate\Http\Request;
 
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\MemberImport;
+
+use Illuminate\Pagination\LengthAwarePaginator;
+
+
 class MemberController extends BaseController
 {
 
@@ -202,9 +208,54 @@ class MemberController extends BaseController
 
     public function upload(Request $request)
     {
-        $fileName = time() . '.' . $request->file->getClientOriginalExtension();
-        $request->file->move(public_path('upload'), $fileName);
+        \Log::info('Uoplad');
 
-        return response()->json(['success' => true]);
+        $file = $request->file('file');
+
+        // TODO ; Veryfication
+        $array = Excel::toArray(new MemberImport,$file); 
+
+        $members = array() ;
+        foreach ($array as $m => $value) {
+
+            foreach ($value as $row) {
+                $m = array(
+                    'graduate'           => $row[0] ,
+                    'last_name_kanji'    => $row[1] ,
+                    'first_name_kanji'   => $row[2] ,
+                    'last_name_kana'     => $row[3] ,
+                    'first_name_kana'    => $row[4] ,
+                    'gender'             => $row[5] ,        
+                    'zipcode'            => $row[6] ,
+                    'address1'           => $row[7] ,
+                    'address2'           => $row[8] ,
+                    'address3'           => $row[9] ,
+                    'phone1'             => $row[10] ,
+                    'phone2'             => $row[11] ,
+                    'email'              => $row[12] ,
+                    'club'               => $row[13] ,
+                    'junior_high_school' => $row[14] ,
+                );
+                array_push($members,$m);
+            }
+        }
+        $members = new LengthAwarePaginator(
+//            collect($members)->forPage($request->page, 10),
+            collect($members)->forPage(1, 10),
+            count($members),
+            10,
+//            $request->page,
+            1,
+            array('path' => $request->url())
+        );
+        return $this->sendResponse($members, 'Member listt');
+
+ 
+//        return redirect()->action('API\V1\MemberController@index');
+
+//        $fileName = time() . '.' . $request->file->getClientOriginalExtension();
+//        $request->file->move(public_path('upload'), $fileName);
+
+ //       return response()->json(['success' => true]);
     }
 }

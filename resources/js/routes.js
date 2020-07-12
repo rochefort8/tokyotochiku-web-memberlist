@@ -8,6 +8,7 @@ export default [
     { path: '/members', component: require('./components/members/Members.vue').default },
     { path: '/members/edit', component: require('./components/members/MembersEdit.vue').default },
     { path: '/members/create', component: require('./components/members/MembersCreate.vue').default },
+    { path: '/members/create/multiple', component: require('./components/members/CreateMultiple.vue').default },
     { path: '/members/view', component: require('./components/members/MembersView.vue').default },
     { path: '/members/delete', component: require('./components/members/MembersDelete.vue').default },
     { path: '/members/removed', component: require('./components/members/RemovedList.vue').default },

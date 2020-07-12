@@ -11,6 +11,7 @@
 
                 <div class="card-tools">
                   <router-link to="/members/removed" class="btn btn-default">削除一覧</router-link>                  
+                  <router-link to="/members/create/multiple" class="btn btn-default">一括登録</router-link>                  
                   <router-link to="/members/create" class="btn btn-default">新規登録</router-link>
                   <!--
                   <button type="button" class="btn btn-sm btn-primary" @click="/members/create">
