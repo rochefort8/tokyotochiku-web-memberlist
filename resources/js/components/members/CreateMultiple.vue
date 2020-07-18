@@ -161,6 +161,7 @@
           },
           onFileSelected(e) {
             const files = e.target.files ;
+
             const formData = new FormData();
             formData.append('file',files[0]);
 

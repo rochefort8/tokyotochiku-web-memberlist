@@ -9,13 +9,15 @@
         </router-link>
       </li>
 
+      <!--  
       <li class="nav-item">
         <router-link to="/products" class="nav-link">
           <i class="nav-icon fas fa-list orange"></i>
           <p>Product</p>
         </router-link>
       </li>
-    
+      -->
+
       <li class="nav-item">
         <router-link to="/members" class="nav-link">
           <i class="nav-icon fas fa-list orange"></i>
@@ -75,19 +77,17 @@
         <li class="nav-item">
           <router-link to="/users" class="nav-link">
             <i class="fa fa-users nav-icon blue"></i>
-            <p>Users</p>
+            <p>ユーザ管理</p>
           </router-link>
         </li>
       @endcan
-
-      
 
       @can('isAdmin')
       <li class="nav-item has-treeview">
         <a href="#" class="nav-link">
           <i class="nav-icon fas fa-cog green"></i>
           <p>
-            Settings
+            設定
             <i class="right fas fa-angle-left"></i>
           </p>
         </a>
