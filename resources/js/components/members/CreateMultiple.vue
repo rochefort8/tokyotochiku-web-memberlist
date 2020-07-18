@@ -143,7 +143,7 @@
         methods: {
            getFullUrl (product) {
              return location.origin + this.getUrl(product)
-          }
+          },
           loadMembers(page = 1){
               var app = this;
               var url = '/api/member?page=' + page ;

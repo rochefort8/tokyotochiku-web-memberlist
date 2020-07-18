@@ -125,11 +125,9 @@
                             <label for="junior_high_school" class="control-label">出身中学</label>                    
                             <select v-model="member.junior_high_school" class="form-control" x-autocompletetype="region">
                                 <option value="" selected="selected">-- 出身中学 --</option>
-                                
-                                <option value="木屋瀬">木屋瀬</option>
-                                <option value="引野">引野</option>
-                                <option value="岡垣">岡垣</option>
-                                <option value="0">不明</option>
+                                <option v-for="jhs in junior_high_schools">
+                                    {{ jhs }}
+                                </option>
                             </select>
                         </div>
 
@@ -184,6 +182,7 @@
                 regions : [
                     '北海道','東北','関東','北陸','中部','関西','中国','四国','九州'
                 ],
+                junior_high_schools : [],
                 prefs : [
                     ['北海道'],
                     ['青森県','岩手県','宮城県','秋田県','山形県','福島県'],
@@ -245,6 +244,13 @@
             }
         },
         methods: {
+            loadClubs(){
+                axios.get("/api/club/list").then(({ data }) => (this.clubs = data.data));
+            },
+            loadJuniorHighSchool(){
+                axios.get("/api/juniorhighschool/list").then(({ data }) => (this.junior_high_schools = data.data));
+            },
+
             saveForm() {
               this.member.zipcode = this.zip;
                 axios.post('/api/member',this.member)
@@ -303,6 +309,8 @@
         },
         created() {
             this.createGraduateTable();
+            this.loadClubs();
+            this.loadJuniorHighSchool();
         },
         filters: {
             truncate: function (text, length, suffix) {

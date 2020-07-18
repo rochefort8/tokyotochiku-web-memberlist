@@ -29,6 +29,9 @@ Route::put('profile', 'API\V1\ProfileController@updateProfile');
 Route::post('change-password', 'API\V1\ProfileController@changePassword');
 Route::get('tag/list', 'API\V1\TagController@list');
 Route::get('category/list', 'API\V1\CategoryController@list');
+Route::get('club/list', 'API\V1\ClubController@list');
+Route::get('juniorhighschool/list', 'API\V1\JuniorHighSchoolController@list');
+
 Route::post('product/upload', 'API\V1\ProductController@upload');
 Route::post('member/upload', 'API\V1\MemberController@upload');
 Route::post('annualfee/upload', 'API\V1\AnnualFeeController@upload');
@@ -36,11 +39,13 @@ Route::get('annualfee/export', 'API\V1\AnnualFeeController@export');
 
 Route::apiResources([
     'user' => 'API\V1\UserController',
-    'product' => 'API\V1\ProductController',
+    'product' => 'API\V1\ProductController', 
     'member' => 'API\V1\MemberController',
     'annualfee' => 'API\V1\AnnualFeeController',
     'newsletter' => 'API\V1\NewsLetterController',
     'zip2address' => 'API\V1\Zip2AddressController',
     'category' => 'API\V1\CategoryController',
     'tag' => 'API\V1\TagController',
+    'club' => 'API\V1\ClubController',
+    'juniorhighschool' => 'API\V1\JuniorHighSchoolController',
 ]);
