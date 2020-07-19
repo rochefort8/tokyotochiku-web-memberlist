@@ -92,7 +92,7 @@
           </p>
         </a>
         <ul class="nav nav-treeview">
-
+          <!--
           <li class="nav-item">
             <router-link to="/product/category" class="nav-link">
               <i class="nav-icon fas fa-list-ol green"></i>
@@ -109,7 +109,25 @@
               </p>
             </router-link>
           </li>
-          
+          -->
+
+          <li class="nav-item">
+            <router-link to="/member/club" class="nav-link">
+              <i class="nav-icon fas fa-list-ol green"></i>
+              <p>
+                部活動
+              </p>
+            </router-link>
+          </li>
+          <li class="nav-item">
+            <router-link to="/member/juniorhighschool" class="nav-link">
+              <i class="nav-icon fas fa-tags green"></i>
+              <p>
+                出身中学
+              </p>
+            </router-link>
+          </li>
+
             <li class="nav-item">
               <router-link to="/developer" class="nav-link">
                   <i class="nav-icon fas fa-cogs white"></i>

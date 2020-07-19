@@ -22,5 +22,10 @@ export default [
 
     { path: '/product/tag', component: require('./components/product/Tag.vue').default },
     { path: '/product/category', component: require('./components/product/Category.vue').default },
+
+
+    { path: '/member/club', component: require('./components/members/Club.vue').default },
+    { path: '/member/juniorhighschool', component: require('./components/members/JuniorHighSchool.vue').default },
+
     { path: '*', component: require('./components/NotFound.vue').default }
 ];
