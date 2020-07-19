@@ -109,6 +109,7 @@
     import VueTagsInput from '@johmun/vue-tags-input';
 
     export default {
+      name : 'VueMemberList',
       components: {
           VueTagsInput,
         },

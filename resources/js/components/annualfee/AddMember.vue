@@ -83,7 +83,7 @@
               
               <div class="card-footer">
                 <div style="margin-top: 40px" class="col-sm-6 text-right">全 {{total}} 件中 {{from}} 〜 {{to}} 件表示</div>
-                <pagination :data="members" :limit=2 @pagination-change-page="getResults"></pagination>
+                <pagination :data="members" :limit=2 @pagination-change-page="loadMembers"></pagination>
               </div>
             </div>
             <!-- /.card -->
@@ -137,169 +137,86 @@
 </template>
 
 <script>
-    import VueTagsInput from '@johmun/vue-tags-input';
+  import VueMemberList from '../members/Members.vue';
 
-    export default {
-      components: {
-          VueTagsInput,
-        },
-        data () {
-            return {
-                editmode: false,
-                members : {},
-                current_page: 1,
-                last_page: 1,
-                total: 1,
-                from: 0,
-                to: 0,
-                keyword: '',
-                search_item: 'name',
-                member : [],
-                form: new Form({
-                    id                : '',
-                    graduate          : '',
-                    last_name_kana    : '',
-                    first_name_kana   : '',
-                    last_name_kanji   : '',
-                    first_name_kanji  : '',
-                    email : '',
-                    annual_fee : '',
-                    payment : '',
-                }),
-                categories: [],
-              
-                tag:  '',
-                autocompleteItems: [],
-            }
-        },
-        watch: {
-          keyword: function (q) {
-            var app = this;
-            axios.get('/api/member?' + this.search_item + '=' + q)
-              .then(({ data }) => (this.members = data.data));	   
-          },
-        },
-        methods: {
-
-          getResults(page = 1) {
-              var app = this;
-              var url = '/api/member?page=' + page ;
-
-              if (this.keyword != "") {
-                  url = url + '&' + this.search_item + '=' + this.keyword;
-              }
-
-              this.$Progress.start();
-              axios.get(url).then(({ data }) => (this.members = data.data));
-
-
-              this.$Progress.finish();
-          },
-          loadMembers(){
-
-              if (this.keyword != "") {
-                  url = url + '&' + this.search_item + '=' + this.keyword;
-              }
-            // if(this.$gate.isAdmin()){
-              axios.get("/api/member").then(({ data }) => (this.members = data.data));
-            // }
-          },
-          loadCategories(){
-              axios.get("/api/category/list").then(({ data }) => (this.categories = data.data));
-          },
-          loadTags(){
-              axios.get("/api/tag/list").then(response => {
-                  this.autocompleteItems = response.data.data.map(a => {
-                      return { text: a.name, id: a.id };
-                  });
-              }).catch(() => console.warn('Oh. Something went wrong'));
-          },
-          editModal(member){
-              this.editmode = true;
-              this.form.reset();
-              $('#addNew').modal('show');
-              this.form.fill(member);
-          },
-          updateMember(){
-              this.$Progress.start();
-              this.form.annual_fee = '2020' + this.form.payment ;
-              this.form.put('/api/member/'+this.form.id)
-              .then((response) => {
-                  // success
-                  $('#addNew').modal('hide');
-                  Toast.fire({
-                    icon: 'success',
-                    title: response.data.message
-                  });
-                  this.$Progress.finish();
-                      //  Fire.$emit('AfterCreate');
-
-                  this.loadMembers();
-              })
-              .catch(() => {
-                  this.$Progress.fail();
+  export default {
+    mixins: [VueMemberList],
+    components: {
+      VueMemberList,
+    },
+    data () {
+      return {
+        editmode: false,
+        form: new Form({
+          id                : '',
+          graduate          : '',
+          last_name_kana    : '',
+          first_name_kana   : '',
+          last_name_kanji   : '',
+          first_name_kanji  : '',
+          email : '',
+          annual_fee : '',
+          payment : '',
+        }),
+      }
+    },
+    methods: {
+      editModal(member){
+          this.editmode = true;
+          this.form.reset();
+          $('#addNew').modal('show');
+          this.form.fill(member);
+      },
+      updateMember(){
+          this.$Progress.start();
+          this.form.annual_fee = '2020' + this.form.payment ;
+          this.form.put('/api/member/'+this.form.id)
+          .then((response) => {
+              // success
+              $('#addNew').modal('hide');
+              Toast.fire({
+                icon: 'success',
+                title: response.data.message
               });
+              this.$Progress.finish();
+                  //  Fire.$emit('AfterCreate');
 
-          },
-          deleteMember(id){
-              Swal.fire({
-                  title: 'Are you sure?',
-                  text: "You won't be able to revert this!",
-                  showCancelButton: true,
-                  confirmButtonColor: '#d33',
-                  cancelButtonColor: '#3085d6',
-                  confirmButtonText: 'Yes, delete it!'
-                  }).then((result) => {
+              this.loadMembers();
+          })
+          .catch(() => {
+              this.$Progress.fail();
+          });
+      },
+      deleteMember(id){
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
 
-                      // Send request to the server
-                        if (result.value) {
-                              this.form.delete('api/member/'+id).then(()=>{
-                                      Swal.fire(
-                                      'Deleted!',
-                                      'Your file has been deleted.',
-                                      'success'
-                                      );
-                                  // Fire.$emit('AfterCreate');
-                                  this.loadMembers();
-                              }).catch((data)=> {
-                                  Swal.fire("Failed!", data.message, "warning");
-                              });
-                        }
-                  })
-          },
-            updateOption(option,text) {
-                this.search_item = option;
-                $('.search-panel span#search_concept').text(text);
-                this.keyword = '';
-                this.loadMembers();
-            },
-            toggleMenu() {
-              this.showMenu = !this.showMenu;
-            },
-        },
-        mounted() {
-            
-        },
-        created() {
-            this.$Progress.start();
-
-            this.loadMembers();
-            this.loadCategories();
-            this.loadTags();
-
-            this.$Progress.finish();
-        },
-        filters: {
-            truncate: function (text, length, suffix) {
-                return text.substring(0, length) + suffix;
-            },
-        },
-        computed: {
-          filteredItems() {
-            return this.autocompleteItems.filter(i => {
-              return i.text.toLowerCase().indexOf(this.tag.toLowerCase()) !== -1;
-            });
-          },
-        }
-    }
+                // Send request to the server
+                  if (result.value) {
+                        this.form.delete('api/member/'+id).then(()=>{
+                                Swal.fire(
+                                'Deleted!',
+                                'Your file has been deleted.',
+                                'success'
+                                );
+                            // Fire.$emit('AfterCreate');
+                            this.loadMembers();
+                        }).catch((data)=> {
+                            Swal.fire("Failed!", data.message, "warning");
+                        });
+                  }
+            })
+      
+      },
+      toggleMenu() {
+        this.showMenu = !this.showMenu;
+      },
+    },
+  }
 </script>
