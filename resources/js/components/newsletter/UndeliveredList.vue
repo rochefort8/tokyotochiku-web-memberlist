@@ -44,59 +44,12 @@
 
               </div>
               <!-- /.card-header -->
-              <div class="card-body table-responsive p-0">
-                <table class="table table-hover">
-                  <thead>
-                    <tr>
-                      <th>卒業期</th>
-                      <th>お名前</th>
-                      <th></th>
-                      <th></th>
-                      <th></th>
-                      <th>性別</th>
-                      <th>爺便番号</th>
-                      <th>住所</th>
-                      <th>操作</th>
-                  </tr>
-
-                  </thead>
-                  <tbody>
-                     <tr v-for="member in members.data" :key="member.id">
-
-                      <td>{{member.graduate}}</td>
-                      <td>{{member.last_name_kanji}}</td>
-                      <td>{{member.first_name_kanji}}</td>
-                      <td>{{member.last_name_kana}}</td>
-                      <td>{{member.first_name_kana}}</td>
-                      <td>{{member.gender}}</td>
-                      <td>{{member.zipcode}}</td>
-                      <td>{{member.address1}}{{member.address2}}{{member.address3}}</td>
-
-                      <!-- <td><img v-bind:src="'/' + member.photo" width="100" alt="member"></td> -->
-                      <td>
-                        <router-link :to="{path: '/members/view', query: {id: member.id}}"> 
-                          <i class="fa fa-eye green"></i>
-                        </router-link>
-
-                        <router-link :to="{path: '/members/edit', query: {id: member.id}}"> 
-                          <i class="fa fa-edit blue"></i>
-                        </router-link>
-
-                        <a href="#" @click="removeFromList(member)">
-                            <i class="fa fa-trash red"></i>
-                        </a>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!-- /.card-body -->
-            
               
-              <div class="card-footer">
-                <div style="margin-top: 40px" class="col-sm-6 text-right">全 {{total}} 件中 {{from}} 〜 {{to}} 件表示</div>
-                <pagination :data="members" :limit=2 @pagination-change-page="loadMembers"></pagination>
-              </div>
+              <member-list-view 
+                :members="members"
+                :isShownAddress="true">
+              </member-list-view>
+
             </div>
             <!-- /.card -->
           </div>
@@ -106,11 +59,11 @@
 </template>
 
 <script>
-    import VueTagsInput from '@johmun/vue-tags-input';
+    import MemberListView from '../members/MemberListView';
 
     export default {
       components: {
-          VueTagsInput,
+          MemberListView,
         },
         data () {
             return {

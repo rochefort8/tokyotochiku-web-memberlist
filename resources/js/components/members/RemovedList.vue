@@ -37,59 +37,12 @@
 
               </div>
               <!-- /.card-header -->
-              <div class="card-body table-responsive p-0">
-                <table class="table table-hover">
-                  <thead>
-                    <tr>
-                      <th>ID</th>
-                      <th>卒業期</th>
-                      <th>お名前</th>
-                      <th></th>
-                      <th></th>
-                      <th></th>
-                      <th>性別</th>
-                      <th>削除理由</th>
-                      <th>操作</th>
-                  </tr>
+              <!-- TODO 
+                Add members.removed
+              -->
 
-                  </thead>
-                  <tbody>
-                     <tr v-for="member in members.data" :key="member.id">
-
-                      <td>{{member.id}}</td>
-                      <td>{{member.graduate}}</td>
-                      <td>{{member.last_name_kanji}}</td>
-                      <td>{{member.first_name_kanji}}</td>
-                      <td>{{member.last_name_kana}}</td>
-                      <td>{{member.first_name_kana}}</td>
-                      <td>{{member.gender}}</td>
-                      <td>{{member.removed}}</td>
-
-                      <!-- <td><img v-bind:src="'/' + member.photo" width="100" alt="member"></td> -->
-                      <td>
-                        <router-link :to="{path: 'members/view', query: {id: member.id}}"> 
-                          <i class="fa fa-eye green"></i>
-                        </router-link>
-
-                        <a href="#" @click="activateMember(member)">
-                          <i class="fa fa-edit blue"></i>
-                        </a>
-
-                        <a href="#" @click="deleteMember(member.id)">
-                          <i class="fa fa-trash red"></i>
-                        </a>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!-- /.card-body -->
-            
-              
-              <div class="card-footer">
-                <div style="margin-top: 40px" class="col-sm-6 text-right">全 {{total}} 件中 {{from}} 〜 {{to}} 件表示</div>
-                <pagination :data="members" :limit=2 @pagination-change-page="getResults"></pagination>
-              </div>
+              <member-list-view :members="members">
+              </member-list-view>
             </div>
             <!-- /.card -->
           </div>
@@ -99,11 +52,11 @@
 </template>
 
 <script>
-    import VueTagsInput from '@johmun/vue-tags-input';
+    import MemberListView from './MemberListView';
 
     export default {
       components: {
-          VueTagsInput,
+          MemberListView,
         },
         data () {
             return {
@@ -130,21 +83,6 @@
           },
         },
         methods: {
-
-          getResults(page = 1) {
-              var app = this;
-              var url = '/api/member?removed=true&page=' + page ;
-
-              if (this.keyword != "") {
-                  url = url + '&' + this.search_item + '=' + this.keyword;
-              }
-
-              this.$Progress.start();
-              axios.get(url).then(({ data }) => (this.members = data.data));
-
-
-              this.$Progress.finish();
-          },
           loadMembers(){
 
               if (this.keyword != "") {
