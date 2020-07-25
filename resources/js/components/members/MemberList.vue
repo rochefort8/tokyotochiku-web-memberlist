@@ -92,6 +92,7 @@
 
 
                       <!-- <td><img v-bind:src="'/' + member.photo" width="100" alt="member"></td> -->
+                      <!--
                       <td>
                         <router-link :to="{path: 'members/view', query: {id: member.id}}"> 
                           <i class="fa fa-eye green"></i>
@@ -104,6 +105,13 @@
                         <router-link :to="{path: 'members/delete', query: {id: member.id}}"> 
                           <i class="fa fa-trash red"></i>
                         </router-link>
+                      </td>
+                      -->
+
+                      <td>
+                          <a href="#" v-for="(operation,index) in operations" v-on:click="doClickedOperation(member,index)">
+                            <i :class='`${operation.icon}`'></i>
+                          </a>
                       </td>
                     </tr>
                   </tbody>
@@ -154,6 +162,28 @@
           type: Number,
           default : 2020
         },
+
+        operations: {
+          type:Array,
+          default : () => ([
+                  {
+                    path: '/members/view',
+                    query:'id: member.id',
+                    icon: 'fa fa-eye green',
+                  },
+                  {
+                    path: '/members/edit',                   
+                    query:'id: member.id',
+                    icon: 'fa fa-edit blue',
+                  },
+                  {
+                    path: '/members/delete',                   
+                    query:'id: member.id',
+                    icon: 'fa fa-trash red',
+                  },
+                ]),
+        },
+
       },
         data () {
             return {
@@ -196,7 +226,13 @@
             this.search_item = item;
             this.loadMembers() ;
           },
-
+          doClickedOperation(member,id) {
+            var path =  this.operations[id].path ; 
+            if (path != null) {
+              var query = this.operations[id].query ; 
+              this.$router.push({path: path, query: { id: member.id }});
+            }
+          },
           loadMembers(page = 1){
               var app = this;
               var url = '/api/member?page=' + page ;
