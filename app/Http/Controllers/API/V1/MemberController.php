@@ -74,6 +74,22 @@ class MemberController extends BaseController
                 ->where('removed',$removed_cond_str,NULL);
         }
         
+        # Convert Kana
+        $str = 'name' ;
+        $value = $request[$str] ;
+        if (!empty($value)) {
+            $value = mb_convert_kana($value,'KC','UTF-8') ;
+
+            $query->where(\DB::raw('CONCAT(last_name_kanji, first_name_kanji)'), 'like', '%'.$value.'%')
+                    ->where('id', '!=', '')
+                    ->where('removed',$removed_cond_str,NULL);
+
+            $query->orWhere(\DB::raw('CONCAT(last_name_kana, first_name_kana)'), 'like', '%'.$value.'%')
+                    ->where('id', '!=', '')
+                    ->where('removed',$removed_cond_str,NULL);
+
+        }
+        
         # Query 
         # TODO : 'address1', 'address2', 'address3'
         $keywords = [ 'email', 'graduate', 'junior_high_school', 'club', 'annual_fee', 'id'];
@@ -88,30 +104,11 @@ class MemberController extends BaseController
         $str = 'phone' ;
         $value = $request[$str] ;
         if (!empty($request[$str])) {
-            $query->where('phone1','like','%'.$value.'%');
-            $query->orWhere('phone2','like','%'.$value.'%')
-                ->where('id', '!=', '')
-                ->where('removed',$removed_cond_str,NULL);
+            $query->where(\DB::raw('CONCAT(phone1,phone2)'),'like','%'.$value.'%')
+                    ->where('id', '!=', '')
+                    ->where('removed',$removed_cond_str,NULL);
         }
       
-        # Convert Kana
-        $str = 'name' ;
-        $value = $request[$str] ;
-        if (!empty($value)) {
-            $value = mb_convert_kana($value,'KC','UTF-8') ;
-
-            $query->where('first_name_kanji','like','%'.$value.'%');     
-            $query->orWhere('last_name_kanji','like','%'.$value.'%')
-                    ->where('id', '!=', '')
-                    ->where('removed',$removed_cond_str,NULL);
-            $query->orWhere('first_name_kana','like','%'.$value.'%')
-                    ->where('id', '!=', '')
-                    ->where('removed',$removed_cond_str,NULL);
-            $query->orWhere('last_name_kana','like','%'.$value.'%')
-                    ->where('id', '!=', '')
-                    ->where('removed',$removed_cond_str,NULL);
-        }
-
         $members = $query->orderBy('id','asc')->paginate(10) ;  
 
 //        \Log::info($members);

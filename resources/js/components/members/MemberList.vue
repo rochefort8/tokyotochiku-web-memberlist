@@ -11,14 +11,14 @@
                 </div>
 
                 <div v-if="is_search_kind_free">
-                    <input v-model="keyword" type="text" class="form-control" id="search_keyword" placeholder="Type content...">
+                    <input v-model="keyword_list.free" type="text" class="form-control" id="search_keyword" placeholder="Type content...">
                 </div>
                 <div v-else>
 
                   <!-- 卒業期 -->
                   <div class="form-group col-xs-12 has-feedback">
                       <label for="graduate" class="control-label">卒業期</label>
-                      <select v-model="graduate" class="form-control" x-autocompletetype="region">
+                      <select v-model="keyword_list.graduate" class="form-control" x-autocompletetype="region">
                           <option value="" selected="selected">-- 卒業期 --</option>
                           <option v-for="graduate in graduates" v-bind:value="graduate.value">
                               {{ graduate.value }}期({{ graduate.string }})
@@ -29,13 +29,13 @@
                   <!--　お名前 -->
                   <div class="col-xs-12 form-group">
                     <label class="control-label">お名前（漢字）</label>    
-                    <input v-model="name "type="text" class="form-control" name="name" placeholder="" x-autocompletetype="surname" required>
+                    <input v-model="keyword_list.name" type="text" class="form-control" name="name" placeholder="">
                   </div>  
 
                   <!--　メールアドレス -->
                   <div class="col-xs-12 form-group">
                       <label for="email" class="control-label">メールアドレス</label>
-                      <input v-model="email" type="email" class="form-control alphabet" name="email" placeholder="yoki-kana@tochiku.com" pattern="^[^0-9][a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[@][a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,4}$" x-autocompletetype="email" required>
+                      <input v-model="keyword_list.email" type="email" class="form-control alphabet" name="email" placeholder="yoki-kana@tochiku.com" pattern="^[^0-9][a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[@][a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,4}$" x-autocompletetype="email" required>
                   </div>
 
                   <!--　フリー -->
@@ -163,21 +163,40 @@
                 total: 1,
                 from: 0,
                 to: 0,
+
+                keyword_list: {
+                    free:     '',
+                    graduate: '',
+                    name:     '',
+                    email:    '',
+                },
+                
+                obj: {
+                   value: ""
+                },
                 keyword: '',
                 search_item: 'name',
+
                 graduates : [],
                 search_kind_string : 'フリー検索',
                 is_search_kind_free : true,
             }
         },
         watch: {
-          keyword: function (q) {
-            this.keyword = q ;
-            this.search_item='free';
-            this.loadMembers() ;
-          },
+
+          ['keyword_list.free']    (newValue,oldValue) {  this.keywordSearch('free',    newValue) ;},
+          ['keyword_list.graduate'](newValue,oldValue) {  this.keywordSearch('graduate',newValue) ;},
+          ['keyword_list.name']    (newValue,oldValue) {  this.keywordSearch('name',    newValue) ;},
+          ['keyword_list.email']   (newValue,oldValue) {  this.keywordSearch('email',   newValue) ;},
+
         },
         methods: {
+          keywordSearch(item, keyword) {
+            this.keyword = keyword ;
+            this.search_item = item;
+            this.loadMembers() ;
+          },
+
           loadMembers(page = 1){
               var app = this;
               var url = '/api/member?page=' + page ;
@@ -194,9 +213,30 @@
               if (this.showNewsletterUndelivered== true) {
                   url = url + '&undelivered=true' ;
               }
+/*  
               if (this.keyword != "") {
                   url = url + '&' + this.search_item + '=' + this.keyword;
               }
+*/
+              // keyword
+              var keyword ;
+              keyword = this.keyword_list.free ;
+              if (keyword != "") {
+                  url = url + '&' + 'free=' + keyword ;
+              }
+              keyword = this.keyword_list.graduate ;
+              if (keyword != "") {
+                  url = url + '&' + 'graduate=' + keyword ;
+              }
+              keyword = this.keyword_list.name ;
+              if (keyword != "") {
+                  url = url + '&' + 'name=' + keyword ;
+              }
+              keyword = this.keyword_list.email ;
+              if (keyword != "") {
+                  url = url + '&' + 'email=' + keyword;
+              }
+
               axios.get(url).then(({ data }) => (this.members = data.data));
           },
           updateOption(option,text) {
@@ -213,6 +253,10 @@
                 this.is_search_kind_free = true ;
                 this.search_kind_string = 'フリー検索' ;
               }
+              this.keyword_list.free      = '' ;
+              this.keyword_list.email     = '' ;
+              this.keyword_list.graduate  = '' ;
+              this.keyword_list.name      = '' ;
           },
           createGraduateTable: function() {
               var _year = 1942 ;
