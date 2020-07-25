@@ -39,9 +39,8 @@ class MemberController extends BaseController
 
         $query = $this->member->query() ;
 
-
         # Remove illegal ID
-        $query->where('id', '!=', '');
+        $query->where('id', '!=', '');        
 
         # Except removed items    
         $str = 'removed' ;
@@ -52,6 +51,29 @@ class MemberController extends BaseController
         } 
         $query->where('removed',$removed_cond_str,NULL);
  
+        # Free
+        $str = 'free' ;
+        $value = $request[$str] ;
+        if (!empty($value)) {
+
+            $strlen= mb_strlen($value) ;
+
+            if ($strlen < 4) {
+                $query->where(\DB::raw('CONCAT(
+                    junior_high_school, graduate, club,
+                    last_name_kana, first_name_kana,
+                    last_name_kanji, first_name_kanji)'), 'like', '%'.$value.'%');
+            } else {
+                $query->where(\DB::raw('CONCAT(
+                    id,email, junior_high_school, graduate, club, phone1,
+                    last_name_kana, first_name_kana,phone2,
+                    last_name_kanji, first_name_kanji)'), 'like', '%'.$value.'%');
+            }
+
+            $query->where('id', '!=', '')
+                ->where('removed',$removed_cond_str,NULL);
+        }
+        
         # Query 
         # TODO : 'address1', 'address2', 'address3'
         $keywords = [ 'email', 'graduate', 'junior_high_school', 'club', 'annual_fee', 'id'];
