@@ -15,6 +15,7 @@
               <member-list
                 :showRemovedMembers="true"
                 :operations="operations"
+                @doOperationHandler="doOperationHandler"
               >
               </member-list> 
 
@@ -43,7 +44,7 @@
                 icon: 'fa fa-eye green',
               },
               {
-                path: '/members/delete',                   
+                path: '',                   
                 query:'id: member.id',
                 icon: 'fa fa-trash red',
               },
@@ -52,6 +53,11 @@
       },
 
         methods: {          
+          doOperationHandler(id,member) {
+            if (id == 1) {
+              this.deleteMember(member.id);
+            }
+          },
           activateMember(member){
               Swal.fire({
                   title: 'Are you sure?',

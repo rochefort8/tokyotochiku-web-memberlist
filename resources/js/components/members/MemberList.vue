@@ -228,11 +228,13 @@
           },
           doClickedOperation(member,id) {
             var path =  this.operations[id].path ; 
-            if (path != null) {
+            if (path != '') {
               var query = this.operations[id].query ; 
               this.$router.push({path: path, query: { id: member.id }});
+            } else {
+              this.$emit('doOperationHandler', id, member)
             }
-          },
+          }, 
           loadMembers(page = 1){
               var app = this;
               var url = '/api/member?page=' + page ;
