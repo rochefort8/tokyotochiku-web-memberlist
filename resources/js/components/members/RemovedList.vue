@@ -13,7 +13,9 @@
               </div>
 
               <member-list
-                :showRemovedMembers="true">
+                :showRemovedMembers="true"
+                :operations="operations"
+              >
               </member-list> 
 
             </div>
@@ -32,6 +34,23 @@
       components: {
           MemberList,
         },
+      data () {
+        return {
+          operations: [
+              {
+                path: '/members/view',
+                query:'id: member.id',
+                icon: 'fa fa-eye green',
+              },
+              {
+                path: '/members/delete',                   
+                query:'id: member.id',
+                icon: 'fa fa-trash red',
+              },
+          ],
+        }
+      },
+
         methods: {          
           activateMember(member){
               Swal.fire({

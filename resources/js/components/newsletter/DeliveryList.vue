@@ -32,6 +32,7 @@
       components: {
           MemberList,
         },
+
         methods: {
           removeFromList(member){
               Swal.fire({

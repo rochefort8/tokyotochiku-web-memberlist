@@ -15,7 +15,8 @@
 
               <member-list
                 :showAnnualFeePayers="true"
-                :fiscalYear=fiscal_year>
+                :fiscalYear=fiscal_year
+                :operations="operations">
               </member-list> 
 
             </div>
@@ -34,11 +35,23 @@
       components: {
           MemberList,
         },
-        data () {
-          return {
-              fiscal_year: '',
-          }
-        },
+      data () {
+        return {
+          fiscal_year: '',
+          operations: [
+              {
+                path: '/members/view',
+                query:'id: member.id',
+                icon: 'fa fa-eye green',
+              },
+              {
+                path: '/members/delete',                   
+                query:'id: member.id',
+                icon: 'fa fa-trash red',
+              },
+          ],
+        }
+      },
         methods: {
           getCurrentFiscalYear() {
             var today = new Date();
