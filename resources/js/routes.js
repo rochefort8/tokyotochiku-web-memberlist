@@ -3,9 +3,11 @@ export default [
     { path: '/profile', component: require('./components/Profile.vue').default },
     { path: '/developer', component: require('./components/Developer.vue').default },
     { path: '/users', component: require('./components/Users.vue').default },
-    { path: '/products', component: require('./components/product/Products.vue').default },
     
+    { path: '/products', component: require('./components/product/Products.vue').default },
     { path: '/members', component: require('./components/members/Members.vue').default },
+    { path: '/members', component: require('./components/product/Products.vue').default },
+   
     { path: '/members/edit', component: require('./components/members/MembersEdit.vue').default },
     { path: '/members/create', component: require('./components/members/MembersCreate.vue').default },
     { path: '/members/create/multiple', component: require('./components/members/CreateMultiple.vue').default },

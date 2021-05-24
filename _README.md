@@ -1,9 +1,13 @@
 
 # Laravel+Vue Crud Starter
 
+
+[![Build Status](https://dev.azure.com/anowarhossain/laravel-vue-crud-starter/_apis/build/status/AnowarCST.laravel-vue-crud-starter?branchName=master)](https://dev.azure.com/anowarhossain/laravel-vue-crud-starter/_build/latest?definitionId=6&branchName=master)
+
+
 ## About Repository
 
-A very simple Laravel 6 + Vue 2 + AdminLTE 3 based Curd Starter template for SPA Application.
+A very simple Laravel 8 + Vue 2 + AdminLTE 3 based Curd Starter template for SPA Application.
 <p align="center">
 <img src="https://i.imgur.com/mZAHbUL.png">
 <img src="https://i.imgur.com/3hhoQnq.png">
@@ -13,7 +17,7 @@ A very simple Laravel 6 + Vue 2 + AdminLTE 3 based Curd Starter template for SPA
 
 ## Tech Specification
 
-- Laravel 6.2
+- Laravel 8
 - Vue 2 + VueRouter + vue-progressbar + sweetalert2 + laravel-vue-pagination
 - Laravel Passport
 - Admin LTE 3 + Bootstrap 4 + Font Awesome 5
@@ -39,6 +43,7 @@ A very simple Laravel 6 + Vue 2 + AdminLTE 3 based Curd Starter template for SPA
 - `composer install`
 - `cp .env.example .env`
 - Update `.env` and set your database credentials
+- `php artisan key:generate`
 - `php artisan migrate`
 - `php artisan db:seed`
 - `php artisan passport:install`
@@ -50,12 +55,15 @@ A very simple Laravel 6 + Vue 2 + AdminLTE 3 based Curd Starter template for SPA
 
 - `docker-compose up -d`
 - `docker exec -it vue-starter /bin/bash`
+- `composer install`
+- `cp .env.example .env`
+- `php artisan key:generate`
 - `php artisan migrate`
 - `php artisan db:seed`
 - `php artisan passport:install`
 - Application http://localhost:8008/
 - Adminer for Database http://localhost:8080/
-- host: yourIP:3307, user: root, Password: 123456
+- DBhost: yourIP:3307, user: root, Password: 123456
 
 
 ## Unit Test

@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,28 +26,35 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 
-Route::get('profile', 'API\V1\ProfileController@profile');
-Route::put('profile', 'API\V1\ProfileController@updateProfile');
-Route::post('change-password', 'API\V1\ProfileController@changePassword');
-Route::get('tag/list', 'API\V1\TagController@list');
-Route::get('category/list', 'API\V1\CategoryController@list');
-Route::get('club/list', 'API\V1\ClubController@list');
-Route::get('juniorhighschool/list', 'API\V1\JuniorHighSchoolController@list');
+Route::namespace('App\\Http\\Controllers\\API\V1')->group(function () {
+    Route::get('profile', 'ProfileController@profile');
+    Route::put('profile', 'ProfileController@updateProfile');
+    Route::post('change-password', 'ProfileController@changePassword');
+    Route::get('tag/list', 'TagController@list');
+    Route::get('category/list', 'CategoryController@list');
+    Route::post('product/upload', 'ProductController@upload');
 
-Route::post('product/upload', 'API\V1\ProductController@upload');
-Route::post('member/upload', 'API\V1\MemberController@upload');
-Route::post('annualfee/upload', 'API\V1\AnnualFeeController@upload');
-Route::get('annualfee/export', 'API\V1\AnnualFeeController@export');
-
-Route::apiResources([
-    'user' => 'API\V1\UserController',
-    'product' => 'API\V1\ProductController', 
-    'member' => 'API\V1\MemberController',
-    'annualfee' => 'API\V1\AnnualFeeController',
-    'newsletter' => 'API\V1\NewsLetterController',
-    'zip2address' => 'API\V1\Zip2AddressController',
-    'category' => 'API\V1\CategoryController',
-    'tag' => 'API\V1\TagController',
-    'club' => 'API\V1\ClubController',
-    'juniorhighschool' => 'API\V1\JuniorHighSchoolController',
-]);
+    Route::post('member/upload', 'MemberController@upload');
+    Route::post('annualfee/upload', 'AnnualFeeController@upload');
+    Route::get('annualfee/export', 'AnnualFeeController@export');
+/*
+    Route::apiResources([
+        'user' => 'UserController',
+        'product' => 'ProductController',
+        'category' => 'CategoryController',
+        'tag' => 'TagController',
+    ]);
+*/
+    Route::apiResources([
+        'user' => 'UserController',
+        'product' => 'ProductController', 
+        'member' => 'MemberController',
+        'annualfee' => 'AnnualFeeController',
+        'newsletter' => 'NewsLetterController',
+        'zip2address' => 'Zip2AddressController',
+        'category' => 'CategoryController',
+        'tag' => 'TagController',
+        'club' => 'ClubController',
+        'juniorhighschool' => 'JuniorHighSchoolController',
+    ]);
+});
